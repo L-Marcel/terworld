@@ -9,6 +9,7 @@ import org.jline.terminal.TerminalBuilder;
 import org.jline.utils.InfoCmp.Capability;
 
 import ufrn.imd.core.timers.Clock;
+import ufrn.imd.inputs.Key;
 import ufrn.imd.inputs.KeyListener;
 
 public class Main {
@@ -17,11 +18,9 @@ public class Main {
 
         ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
         try (Terminal terminal = TerminalBuilder.terminal()) {
+            Inputs inputs = new Inputs();
             KeyListener keyListener = new KeyListener(executor, terminal);
-            keyListener.listen(key -> {
-                terminal.writer().println(key.character());
-                terminal.writer().flush();
-            });
+            keyListener.listen(inputs::register);
 
             while (true) {
                 if (clock.isTick()) {
@@ -32,8 +31,14 @@ public class Main {
                     int altura = terminal.getRows();
 
                     terminal.writer().println(largura + " x " + altura);
-                    terminal.writer().println(clock.getFrame());
+                    terminal.writer().println("Frame: " + clock.getFrame());
+
+                    for (Key key : inputs.getPressedKeys()) {
+                        terminal.writer().println("Key: " + key.character() + " -> " + inputs.getState(key));
+                    }
+
                     terminal.writer().flush();
+                    inputs.update();
                 }
             }
         }

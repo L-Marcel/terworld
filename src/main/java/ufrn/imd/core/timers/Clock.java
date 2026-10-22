@@ -3,10 +3,13 @@ package ufrn.imd.core.timers;
 public class Clock {
   private int frame = 0;
 
+  private long lastTick = 0;
+
   public boolean isTick() {
-    if (System.currentTimeMillis() % 16 == 0) {
-      frame += 1;
-      frame %= 60;
+    long now = System.currentTimeMillis();
+    if (now - this.lastTick >= 16) {
+      this.lastTick = now;
+      this.frame = (this.frame + 1) % 60;
       return true;
     }
 
