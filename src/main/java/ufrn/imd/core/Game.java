@@ -3,10 +3,14 @@ package ufrn.imd.core;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
+import ufrn.imd.core.interfaces.Node;
+import ufrn.imd.core.interfaces.Node2D;
 import ufrn.imd.inputs.Key;
 
 public class Game {
   private Queue<Level> levels;
+  private List<Node> nodes;
+  private Node2D player;
   private Level current;
 
   public void nextLevel() {
@@ -15,6 +19,14 @@ public class Game {
   }
 
   public void process(Key key) {
+    for (Node node : this.nodes) {
+      node.process(key);
+      if (node instanceof Node2D node2d)
+        this.render(node2d);
+    }
+  }
+
+  public void render(Node2D node2d) {
 
   }
 
