@@ -2,6 +2,7 @@ package ufrn.imd.core;
 
 import java.util.ArrayList;
 import java.util.List;
+import ufrn.imd.core.interfaces.Node;
 import ufrn.imd.core.interfaces.Node2D;
 
 public class Render {
@@ -19,6 +20,11 @@ public class Render {
       node2d.getPosition(),
       node2d.getShape()
     );
+
+    for (Node child : node2d.getChildren()) {
+      if (child instanceof Node2D child2d)
+        this.render(child2d);
+    }
   }
 
   private void put(Vector2 position, char shape) {

@@ -8,10 +8,16 @@ import ufrn.imd.core.interfaces.Node2D;
 import ufrn.imd.inputs.Key;
 
 public class Player implements Node2D {
+  private List<Node> childrens;
+  private boolean flipped = false;
   private Vector2 position;
+  private Sword sword;
 
   public Player(Vector2 position) {
     this.position = position;
+    this.sword = new Sword(position.sum(1, 0));
+    this.childrens = new ArrayList<>(1);
+    this.childrens.add(this.sword);
   }
 
   @Override
@@ -25,13 +31,20 @@ public class Player implements Node2D {
         break;
       case 'a':
         this.position = this.position.sum(-1, 0);
+        this.flipped = true;
         break;
       case 'd':
         this.position = this.position.sum(1, 0);
+        this.flipped = false;
         break;
       default:
         break;
     }
+
+    this.sword.setFlipped(this.flipped);
+    this.sword.setPosition(
+      this.position.sum(this.flipped ? -1 : 1, 0)
+    );
   }
 
   @Override
@@ -45,7 +58,7 @@ public class Player implements Node2D {
   }
 
   @Override
-  public List<Node> getChildrens() {
-    return new ArrayList<>();
+  public List<Node> getChildren() {
+    return this.childrens;
   }
 }

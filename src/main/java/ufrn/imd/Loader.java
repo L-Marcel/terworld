@@ -15,7 +15,10 @@ import java.util.stream.Stream;
 import ufrn.imd.core.Level;
 import ufrn.imd.core.Vector2;
 import ufrn.imd.core.interfaces.Node;
+import ufrn.imd.core.nodes.EndOfLevel;
+import ufrn.imd.core.nodes.Enemy;
 import ufrn.imd.core.nodes.Player;
+import ufrn.imd.core.nodes.Spike;
 
 public class Loader {
   public Queue<Level> load() throws IOException, URISyntaxException {
@@ -71,15 +74,24 @@ public class Loader {
         char character = characters[column];
         content[row][column] = ' ';
 
+        Vector2 position = new Vector2(column, row);
+
         switch (character) {
           case 'O':
-            player = new Player(new Vector2(column, row));
+            player = new Player(position);
             nodes.add(player);
             break;
           case 'E':
-            // TODO - Enemy
+            Enemy enemy = new Enemy(position);
+            nodes.add(enemy);
+            break;
+          case '!':
+            Spike spike = new Spike(position);
+            nodes.add(spike);
             break;
           case '?':
+            EndOfLevel endOfLevel = new EndOfLevel(position);
+            nodes.add(endOfLevel);
             break;
           default:
             content[row][column] = character;
