@@ -30,7 +30,11 @@ public class KeyListener implements AutoCloseable {
         int code = this.terminal.reader().read(100);
         if (code == NonBlockingReader.EOF) break;
         else if (code == NonBlockingReader.READ_EXPIRED) continue;
-        callback.accept(Key.of(code));
+
+        Key key = Key.of(code);
+        
+        if (key.isValid()) 
+          callback.accept(key);
       }
     } catch (Exception e) {
       Thread.currentThread().interrupt();
