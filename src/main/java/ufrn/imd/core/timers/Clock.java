@@ -19,10 +19,6 @@ public class Clock {
     this.forceTick = false;
   }
 
-  public void tryLock() {
-    while (!this.reetrantLock.tryLock());
-  }
-
   public void lock() {
     this.reetrantLock.lock();
   }

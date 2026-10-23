@@ -12,8 +12,9 @@ public class KeyListener {
   private Key pressed;
 
   public KeyListener(Terminal terminal) {
+    this.pressed = Key.none();
     this.terminal = terminal;
-    this.executor = Executors.newVirtualThreadPerTaskExecutor();;
+    this.executor = Executors.newVirtualThreadPerTaskExecutor();
   }
 
   public void listen(Consumer<Key> callback) {

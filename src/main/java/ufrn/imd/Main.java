@@ -20,32 +20,38 @@ public class Main {
             
             listener.listen(key -> {
                 clock.lock();
-                listener.setPressedKey(key);
-                clock.forceTick();
-                clock.unlock();
+
+                try {
+                    listener.setPressedKey(key);
+                    clock.forceTick();
+                } finally {
+                   clock.unlock();
+                }
             });
 
             while (true) {
-                clock.tryLock();
+                clock.lock();
 
-                if (clock.isTick()) {
-                    terminal.puts(Capability.clear_screen);
-                    terminal.flush();
+                try {
+                    if (clock.isTick()) {
+                        terminal.puts(Capability.clear_screen);
+                        terminal.flush();
 
-                    game.process(listener.getPressedKey());
+                        game.process(listener.getPressedKey());
 
-                    Screen screen = game.getScreen(
-                        terminal.getColumns(), 
-                        terminal.getRows()
-                    );
+                        Screen screen = game.getScreen(
+                            terminal.getColumns(), 
+                            terminal.getRows()
+                        );
 
-                    screen.content().forEach(terminal.writer()::println);
-                    terminal.writer().flush();
+                        screen.content().forEach(terminal.writer()::println);
+                        terminal.writer().flush();
 
-                    listener.setPressedKey(Key.none());
+                        listener.setPressedKey(Key.none());
+                    }
+                } finally {
+                    clock.unlock();
                 }
-
-                clock.unlock();
             }
         }
     }
