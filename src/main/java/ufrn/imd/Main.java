@@ -15,8 +15,10 @@ public class Main {
         Clock clock = new Clock(1, 4);
         Game game = new Game();
 
-        try (Terminal terminal = TerminalBuilder.terminal()) {
+        try (
+            Terminal terminal = TerminalBuilder.terminal();
             KeyListener listener = new KeyListener(terminal);
+        ) {
             
             listener.listen(key -> {
                 clock.lock();
@@ -29,7 +31,7 @@ public class Main {
                 }
             });
 
-            while (true) {
+            while (!Thread.currentThread().isInterrupted()) {
                 clock.lock();
 
                 try {

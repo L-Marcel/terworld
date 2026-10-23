@@ -5,8 +5,9 @@ import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import org.jline.terminal.Attributes;
 import org.jline.terminal.Terminal;
+import org.jline.utils.NonBlockingReader;
 
-public class KeyListener {
+public class KeyListener implements AutoCloseable {
   private final ExecutorService executor;
   private final Terminal terminal;
   private Key pressed;
@@ -26,7 +27,8 @@ public class KeyListener {
 
     try {
       while (!Thread.currentThread().isInterrupted()) {
-        int code = this.terminal.reader().read();
+        int code = this.terminal.reader().read(100);
+        if (code == NonBlockingReader.READ_EXPIRED) continue;
         callback.accept(Key.of(code));
       }
     } catch (Exception e) {
@@ -42,5 +44,11 @@ public class KeyListener {
 
   public void setPressedKey(Key key) {
     this.pressed = key;
+  }
+
+  @Override
+  public void close() {
+    this.executor.shutdownNow();
+    this.executor.close();
   }
 }
