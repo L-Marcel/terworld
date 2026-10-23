@@ -28,7 +28,8 @@ public class KeyListener implements AutoCloseable {
     try {
       while (!Thread.currentThread().isInterrupted()) {
         int code = this.terminal.reader().read(100);
-        if (code == NonBlockingReader.READ_EXPIRED) continue;
+        if (code == NonBlockingReader.EOF) break;
+        else if (code == NonBlockingReader.READ_EXPIRED) continue;
         callback.accept(Key.of(code));
       }
     } catch (Exception e) {
