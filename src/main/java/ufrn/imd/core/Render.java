@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import ufrn.imd.core.abstractions.Node;
 import ufrn.imd.core.abstractions.Node2D;
+import ufrn.imd.core.constants.Comparators;
 import ufrn.imd.core.constants.Rendering;
 
 public class Render {
@@ -14,19 +15,23 @@ public class Render {
     this.level = level;
   }
 
-  public void render(Node2D node2d) {
-    if (node2d.isFreePending())
+  public void render(List<Node> nodes) {
+    for (Node node : nodes.stream().sorted(Comparators.BY_LAYER).toList()) {
+      this.render(node);
+    }
+  }
+
+  public void render(Node node) {
+    if (node.isFreePending())
       return;
 
-    this.put(
-      node2d.getPosition(),
-      node2d.getShape()
-    );
+    if (node instanceof Node2D node2d)
+      this.put(
+        node2d.getPosition(),
+        node2d.getShape()
+      );
 
-    for (Node child : node2d.getChildren()) {
-      if (child instanceof Node2D child2d)
-        this.render(child2d);
-    }
+    this.render(node.getChildren());
   }
 
   private void put(Vector2 position, char shape) {

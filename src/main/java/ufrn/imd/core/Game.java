@@ -4,17 +4,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import ufrn.imd.core.abstractions.Node;
-import ufrn.imd.core.abstractions.Node2D;
-import ufrn.imd.core.constants.Comparators;
 import ufrn.imd.inputs.Key;
 
 public class Game {
   private Queue<Level> levels;
   private List<Node> nodes;
   private Render render;
+  private Physics physics;
 
   public Game() {
-    this.render = new Render(Level.empty());
+    Level level = Level.empty();
+    this.render = new Render(level);
+    this.physics = new Physics(level);
     this.levels = new LinkedList<>();
     this.nodes = new LinkedList<>();
   }
@@ -26,33 +27,39 @@ public class Game {
       level = this.levels.poll();
 
     this.render = new Render(level);
+    this.physics = new Physics(level);
     this.nodes = level.nodes();
-    this.nodes.sort(Comparators.BY_LAYER);
   }
 
   public void process(Key key) {
-    this.render.reset();
-
     for (Node node : this.nodes) {
-      node.process(key);
-      if (node instanceof Node2D node2d)
-        this.render.render(node2d);
+      this.process(node, key);
     }
 
     for (Node node : this.nodes) {
       this.freeQueued(node);
     }
+
+    this.nodes.removeIf(Node::isFreePending);
+
+    this.render.reset();
+    this.render.render(this.nodes);
+  }
+
+  private void process(Node node, Key key) {
+    if (node.isFreePending())
+      return;
+
+    node.process(key, this.physics);
+    for (Node child : node.getChildren())
+      this.process(child, key);
   }
 
   private void freeQueued(Node node) {
-    if (node.isFreePending()) {
-      for (Node child : node.getChildren())
+    for (Node child : List.copyOf(node.getChildren())) {
+      this.freeQueued(child);
+      if (child.isFreePending())
         node.removeChild(child);
-      if (node.getParent().isEmpty())
-        this.nodes.remove(node);
-    } else {
-      for (Node child : node.getChildren())
-        this.freeQueued(child);
     }
   }
 

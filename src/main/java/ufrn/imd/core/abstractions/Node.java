@@ -3,7 +3,7 @@ package ufrn.imd.core.abstractions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import ufrn.imd.core.constants.Comparators;
+import ufrn.imd.core.Physics;
 import ufrn.imd.inputs.Key;
 
 public abstract class Node {
@@ -23,16 +23,13 @@ public abstract class Node {
 
   public final void addChild(Node node) {
     this.children.add(node);
-    this.children.sort(Comparators.BY_LAYER);
     node.parent.ifPresent(p -> p.removeChild(node));
     node.parent = Optional.of(this);
   }
 
   public final void removeChild(Node node) {
-    if (this.children.remove(node)) {
+    if (this.children.remove(node))
       node.parent = Optional.empty();
-      this.children.sort(Comparators.BY_LAYER);
-    }
   }
 
   public Optional<Node> getParent() {
@@ -43,5 +40,5 @@ public abstract class Node {
     return this.children;
   }
 
-  public void process(Key key) {};
+  public void process(Key key, Physics physics) {}
 }
