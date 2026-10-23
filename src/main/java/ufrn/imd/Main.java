@@ -3,42 +3,40 @@ package ufrn.imd;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.utils.InfoCmp.Capability;
 
 import ufrn.imd.core.timers.Clock;
-import ufrn.imd.inputs.Key;
 import ufrn.imd.inputs.KeyListener;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        Clock clock = new Clock();
-
         ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
+        AtomicLong turn = new AtomicLong(0);
+        Clock clock = new Clock(1);
+       
         try (Terminal terminal = TerminalBuilder.terminal()) {
-            Inputs inputs = new Inputs();
             KeyListener keyListener = new KeyListener(executor, terminal);
-            keyListener.listen(inputs::register);
+            keyListener.listen(key -> {});
 
             while (true) {
                 if (clock.isTick()) {
                     terminal.puts(Capability.clear_screen);
                     terminal.flush();
 
-                    int largura = terminal.getColumns();
-                    int altura = terminal.getRows();
+                    int columns = terminal.getColumns();
+                    int rows = terminal.getRows();
 
-                    terminal.writer().println(largura + " x " + altura);
-                    terminal.writer().println("Frame: " + clock.getFrame());
-
-                    for (Key key : inputs.getPressedKeys()) {
-                        terminal.writer().println("Key: " + key.character() + " -> " + inputs.getState(key));
-                    }
-
+                    terminal.writer().println(columns + " x " + rows);
+                    terminal.writer().println("Tick interval: " + clock.getTickInterval());
+                    terminal.writer().println("Last tick: " + clock.getLastTick());
+                    terminal.writer().println("Turn: " +turn);
                     terminal.writer().flush();
-                    inputs.update();
+
+                    turn.getAndIncrement();
                 }
             }
         }

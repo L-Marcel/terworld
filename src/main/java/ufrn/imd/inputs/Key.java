@@ -4,51 +4,25 @@ import java.util.Objects;
 
 public record Key(
   char character, 
-  int keyCode,
-  int modifier
+  int code
 ) {
-  public static Key of(int keyCode) {
-    return Key.of(keyCode, 1);
-  }
-
-  public static Key of(int keyCode, int modifier) {
+  public static Key of(int code) {
     return new Key(
-      Character.toLowerCase((char) keyCode), 
-      keyCode,
-      modifier
+      (char) code,
+      code
     );
   }
 
-  // TODO : Esses modificadores devem estar errados
-  public boolean isShift() {
-    int mask = this.modifier - 1;
-    return (mask & 1) != 0;
-  }
-
-  public boolean isAlt() {
-    int mask = this.modifier - 1;
-    return (mask & 2) != 0;
-  }
-
-  public boolean isControl() {
-    int mask = this.modifier - 1;
-    return (mask & 4) != 0;
-  }
-
-  public boolean isSuper() {
-    int mask = this.modifier - 1;
-    return (mask & 8) != 0;
-  }
-
-  public boolean isAltGr() {
-    int mask = this.modifier - 1;
-    return (mask & 16) != 0;
+  public static Key of(char character) {
+    return new Key(
+      character,
+      (int) character
+    );
   }
 
   public boolean equals(Key other) {
     return this.character == other.character &&
-      this.keyCode == other.keyCode &&
-      this.modifier == other.modifier;
+      this.code == other.code;
   }
 
   public boolean equals(Object other) {
@@ -62,8 +36,7 @@ public record Key(
   public int hashCode() {
     return Objects.hash(
       this.character, 
-      this.keyCode, 
-      this.modifier
+      this.code
     );
   }
 }

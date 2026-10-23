@@ -1,22 +1,30 @@
 package ufrn.imd.core.timers;
 
 public class Clock {
-  private int frame = 0;
+  private final double tickInterval;
+  private double lastTick;
 
-  private long lastTick = 0;
+  public Clock(double ticksPerSecond) {
+    this.tickInterval = 1000.0 / ticksPerSecond;
+  }
 
   public boolean isTick() {
     long now = System.currentTimeMillis();
-    if (now - this.lastTick >= 16) {
+    double diff = now - this.lastTick;
+
+    if (diff >= this.tickInterval) {
       this.lastTick = now;
-      this.frame = (this.frame + 1) % 60;
       return true;
     }
 
     return false;
   }
 
-  public int getFrame() {
-    return this.frame;
+  public double getTickInterval() {
+    return this.tickInterval;
+  }
+
+  public double getLastTick() {
+    return this.lastTick;
   }
 }
