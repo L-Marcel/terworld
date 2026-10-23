@@ -8,7 +8,7 @@ public abstract class Body2D extends Node2D {
     super(position, layer);
   }
 
-  protected final void move(Vector2 displacement, Physics physics) {
-    this.position = physics.move(this, displacement);
+  protected final void move(Vector2 velocity, Physics physics) {
+    this.position = physics.move(this, velocity);
   }
 }

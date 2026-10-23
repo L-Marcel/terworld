@@ -10,14 +10,14 @@ public class Physics {
     this.level = level;
   }
 
-  public Vector2 move(Body2D body, Vector2 displacement) {
+  public Vector2 move(Body2D body, Vector2 velocity) {
     Vector2 position = body.getPosition();
 
     if (body.isFreePending())
       return position;
 
-    position = this.resolveAxis(body, position, displacement.x(), true);
-    return this.resolveAxis(body, position, displacement.y(), false);
+    position = this.resolveAxis(body, position, velocity.x(), true);
+    return this.resolveAxis(body, position, velocity.y(), false);
   }
 
   private Vector2 resolveAxis(
