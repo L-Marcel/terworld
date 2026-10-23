@@ -15,8 +15,11 @@ public class Main {
     Game game = new Game();
 
     try (
+    //@formatter:off
       Terminal terminal = TerminalBuilder.terminal();
-      KeyListener listener = new KeyListener(terminal)) {
+      KeyListener listener = new KeyListener(terminal)
+    //@formatter:on
+    ) {
       listener.listen(key -> {
         clock.lock();
 
