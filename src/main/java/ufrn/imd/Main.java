@@ -6,7 +6,6 @@ import org.jline.terminal.TerminalBuilder;
 import org.jline.utils.InfoCmp.Capability;
 import ufrn.imd.core.Game;
 import ufrn.imd.core.Screen;
-import ufrn.imd.core.timers.Clock;
 import ufrn.imd.inputs.Key;
 import ufrn.imd.inputs.KeyListener;
 
@@ -26,7 +25,7 @@ public class Main {
                     listener.setPressedKey(key);
                     clock.forceTick();
                 } finally {
-                   clock.unlock();
+                    clock.unlock();
                 }
             });
 

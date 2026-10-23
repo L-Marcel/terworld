@@ -1,4 +1,4 @@
-package ufrn.imd.core.timers;
+package ufrn.imd;
 
 import java.util.concurrent.locks.ReentrantLock;
 
