@@ -14,7 +14,7 @@ import java.util.Queue;
 import java.util.stream.Stream;
 import ufrn.imd.core.Level;
 import ufrn.imd.core.Vector2;
-import ufrn.imd.core.interfaces.Node;
+import ufrn.imd.core.abstractions.Node;
 import ufrn.imd.core.nodes.EndOfLevel;
 import ufrn.imd.core.nodes.Enemy;
 import ufrn.imd.core.nodes.Player;

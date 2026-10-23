@@ -1,23 +1,17 @@
 package ufrn.imd.core.nodes;
 
-import java.util.ArrayList;
-import java.util.List;
 import ufrn.imd.core.Vector2;
-import ufrn.imd.core.interfaces.Node;
-import ufrn.imd.core.interfaces.Node2D;
+import ufrn.imd.core.abstractions.Node2D;
 import ufrn.imd.inputs.Key;
 
-public class Player implements Node2D {
-  private List<Node> childrens;
+public class Player extends Node2D {
   private boolean flipped = false;
-  private Vector2 position;
   private Sword sword;
 
   public Player(Vector2 position) {
-    this.position = position;
+    super(position);
     this.sword = new Sword(position.sum(1, 0));
-    this.childrens = new ArrayList<>(1);
-    this.childrens.add(this.sword);
+    this.addChild(this.sword);
   }
 
   @Override
@@ -48,17 +42,7 @@ public class Player implements Node2D {
   }
 
   @Override
-  public Vector2 getPosition() {
-    return this.position;
-  }
-
-  @Override
   public char getShape() {
     return 'O';
-  }
-
-  @Override
-  public List<Node> getChildren() {
-    return this.childrens;
   }
 }

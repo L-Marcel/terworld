@@ -2,8 +2,8 @@ package ufrn.imd.core;
 
 import java.util.ArrayList;
 import java.util.List;
-import ufrn.imd.core.interfaces.Node;
-import ufrn.imd.core.interfaces.Node2D;
+import ufrn.imd.core.abstractions.Node;
+import ufrn.imd.core.abstractions.Node2D;
 
 public class Render {
   private static final int BOTTOM_OFFSET = 6;

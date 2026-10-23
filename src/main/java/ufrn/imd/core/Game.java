@@ -3,8 +3,8 @@ package ufrn.imd.core;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import ufrn.imd.core.interfaces.Node;
-import ufrn.imd.core.interfaces.Node2D;
+import ufrn.imd.core.abstractions.Node;
+import ufrn.imd.core.abstractions.Node2D;
 import ufrn.imd.inputs.Key;
 
 public class Game {
