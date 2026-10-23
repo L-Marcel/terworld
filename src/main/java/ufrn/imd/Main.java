@@ -1,43 +1,51 @@
 package ufrn.imd;
 
 import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicLong;
-
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.utils.InfoCmp.Capability;
-
+import ufrn.imd.core.Game;
+import ufrn.imd.core.Screen;
 import ufrn.imd.core.timers.Clock;
+import ufrn.imd.inputs.Key;
 import ufrn.imd.inputs.KeyListener;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
-        AtomicLong turn = new AtomicLong(0);
-        Clock clock = new Clock(1);
-       
+        Clock clock = new Clock(1, 4);
+        Game game = new Game();
+
         try (Terminal terminal = TerminalBuilder.terminal()) {
-            KeyListener keyListener = new KeyListener(executor, terminal);
-            keyListener.listen(key -> {});
+            KeyListener listener = new KeyListener(terminal);
+            
+            listener.listen(key -> {
+                clock.lock();
+                listener.setPressedKey(key);
+                clock.forceTick();
+                clock.unlock();
+            });
 
             while (true) {
+                clock.tryLock();
+
                 if (clock.isTick()) {
                     terminal.puts(Capability.clear_screen);
                     terminal.flush();
 
-                    int columns = terminal.getColumns();
-                    int rows = terminal.getRows();
+                    game.process(listener.getPressedKey());
 
-                    terminal.writer().println(columns + " x " + rows);
-                    terminal.writer().println("Tick interval: " + clock.getTickInterval());
-                    terminal.writer().println("Last tick: " + clock.getLastTick());
-                    terminal.writer().println("Turn: " +turn);
+                    Screen screen = game.getScreen(
+                        terminal.getColumns(), 
+                        terminal.getRows()
+                    );
+
+                    screen.content().forEach(terminal.writer()::println);
                     terminal.writer().flush();
 
-                    turn.getAndIncrement();
+                    listener.setPressedKey(Key.none());
                 }
+
+                clock.unlock();
             }
         }
     }

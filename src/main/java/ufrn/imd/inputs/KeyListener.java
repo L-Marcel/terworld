@@ -1,6 +1,7 @@
 package ufrn.imd.inputs;
 
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import org.jline.terminal.Attributes;
 import org.jline.terminal.Terminal;
@@ -8,13 +9,11 @@ import org.jline.terminal.Terminal;
 public class KeyListener {
   private final ExecutorService executor;
   private final Terminal terminal;
+  private Key pressed;
 
-  public KeyListener(
-    ExecutorService executor,
-    Terminal terminal
-  ) {
+  public KeyListener(Terminal terminal) {
     this.terminal = terminal;
-    this.executor = executor;
+    this.executor = Executors.newVirtualThreadPerTaskExecutor();;
   }
 
   public void listen(Consumer<Key> callback) {
@@ -27,13 +26,20 @@ public class KeyListener {
     try {
       while (!Thread.currentThread().isInterrupted()) {
         int code = this.terminal.reader().read();
-        Key key = Key.of(code);
-        callback.accept(key);
+        callback.accept(Key.of(code));
       }
     } catch (Exception e) {
       Thread.currentThread().interrupt();
     } finally {
       terminal.setAttributes(config);
     }
+  }
+
+  public Key getPressedKey() {
+    return this.pressed;
+  }
+
+  public void setPressedKey(Key key) {
+    this.pressed = key;
   }
 }

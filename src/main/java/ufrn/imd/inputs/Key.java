@@ -1,42 +1,25 @@
 package ufrn.imd.inputs;
 
-import java.util.Objects;
+public record Key(int code) {
+  public static Key none() {
+    return new Key(-1);
+  }
 
-public record Key(
-  char character, 
-  int code
-) {
   public static Key of(int code) {
-    return new Key(
-      (char) code,
-      code
-    );
+    return new Key(code);
   }
 
   public static Key of(char character) {
     return new Key(
-      character,
       (int) character
     );
   }
 
-  public boolean equals(Key other) {
-    return this.character == other.character &&
-      this.code == other.code;
+  public boolean is(char character) {
+    return this.is((int) character);
   }
 
-  public boolean equals(Object other) {
-    if (other == null) return false;
-    if (this == other) return true;
-    if (other instanceof Key key)
-      return this.equals(key);
-    return false;
-  }
-
-  public int hashCode() {
-    return Objects.hash(
-      this.character, 
-      this.code
-    );
+  public boolean is(int code) {
+    return this.code == code;
   }
 }
