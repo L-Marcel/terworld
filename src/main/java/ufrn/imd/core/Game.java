@@ -30,10 +30,27 @@ public class Game {
 
   public void process(Key key) {
     this.render.reset();
+
     for (Node node : this.nodes) {
       node.process(key);
       if (node instanceof Node2D node2d)
         this.render.render(node2d);
+    }
+
+    for (Node node : this.nodes) {
+      this.freeQueued(node);
+    }
+  }
+
+  private void freeQueued(Node node) {
+    if (node.isFreePending()) {
+      for (Node child : node.getChildren())
+        node.removeChild(child);
+      if (node.getParent().isEmpty())
+        this.nodes.remove(node);
+    } else {
+      for (Node child : node.getChildren())
+        this.freeQueued(child);
     }
   }
 

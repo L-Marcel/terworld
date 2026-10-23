@@ -16,6 +16,9 @@ public class Render {
   }
 
   public void render(Node2D node2d) {
+    if (node2d.isFreePending())
+      return;
+
     this.put(
       node2d.getPosition(),
       node2d.getShape()
