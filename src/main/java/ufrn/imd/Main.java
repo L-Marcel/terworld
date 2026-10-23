@@ -19,7 +19,6 @@ public class Main {
             Terminal terminal = TerminalBuilder.terminal();
             KeyListener listener = new KeyListener(terminal);
         ) {
-            
             listener.listen(key -> {
                 clock.lock();
 
@@ -38,6 +37,9 @@ public class Main {
                     if (clock.isTick()) {
                         terminal.puts(Capability.clear_screen);
                         terminal.flush();
+
+                        if (listener.getPressedKey().is(3))
+                            break;
 
                         game.process(listener.getPressedKey());
 
