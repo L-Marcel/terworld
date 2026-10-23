@@ -5,6 +5,8 @@ import java.util.List;
 import ufrn.imd.core.interfaces.Node2D;
 
 public class Render {
+  private static final int BOTTOM_OFFSET = 6;
+
   private final Level level;
   private char[][] map;
 
@@ -40,18 +42,26 @@ public class Render {
   }
 
   public Window getWindow(int columns, int rows) {
-    List<String> screen = new ArrayList<>(this.level.height());
+    int width = Math.max(0, Math.min(columns, this.level.width()));
+    int height = Math.max(0, Math.min(rows, this.level.height()));
 
-    for (int row = 0; row < this.level.height(); row++) {
-      StringBuilder builder = new StringBuilder();
+    if (width == 0 || height == 0)
+      return new Window(0, 0, List.of());
 
-      for (int column = 0; column < this.level.width(); column++) {
-        builder.append(this.map[row][column]);
-      }
+    Vector2 origin = this.level.player().getPosition();
 
-      screen.add(builder.toString());
+    int offsetX = width / 3;
+    int offsetY = Math.max(0, height - 1 - BOTTOM_OFFSET);
+
+    int left = Math.max(0, Math.min(origin.x() - offsetX, this.level.width() - width));
+    int top = Math.max(0, Math.min(origin.y() - offsetY, this.level.height() - height));
+
+    List<String> screen = new ArrayList<>(height);
+
+    for (int row = top; row < top + height; row++) {
+      screen.add(new String(this.map[row], left, width));
     }
 
-    return new Window(this.level.width(), this.level.height(), screen);
+    return new Window(width, height, screen);
   }
 }
