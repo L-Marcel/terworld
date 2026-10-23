@@ -16,22 +16,29 @@ public class Render {
   }
 
   public void render(List<Node> nodes) {
-    for (Node node : nodes.stream().sorted(Comparators.BY_LAYER).toList()) {
-      this.render(node);
-    }
+    List<Node2D> visible = new ArrayList<>();
+
+    for (Node node : nodes)
+      this.collectVisible(node, visible);
+
+    visible.sort(Comparators.BY_LAYER);
+    for (Node2D node : visible)
+      this.put(node.getPosition(), node.getShape());
   }
 
   public void render(Node node) {
+    this.render(List.of(node));
+  }
+
+  private void collectVisible(Node node, List<Node2D> visible) {
     if (node.isFreePending())
       return;
 
     if (node instanceof Node2D node2d)
-      this.put(
-        node2d.getPosition(),
-        node2d.getShape()
-      );
+      visible.add(node2d);
 
-    this.render(node.getChildren());
+    for (Node child : node.getChildren())
+      this.collectVisible(child, visible);
   }
 
   private void put(Vector2 position, char shape) {
