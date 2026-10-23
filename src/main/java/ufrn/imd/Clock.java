@@ -19,7 +19,7 @@ public class Clock {
     this.lastForcedTick = now - (long) Math.ceil(this.forcedTickInterval * 1_000_000.0);
     this.forceTick = false;
   }
-
+ 
   public void lock() {
     this.reetrantLock.lock();
   }
@@ -27,7 +27,7 @@ public class Clock {
   public void unlock() {
     this.reetrantLock.unlock();
   }
-  
+
   public void forceTick() {
     this.lock();
 

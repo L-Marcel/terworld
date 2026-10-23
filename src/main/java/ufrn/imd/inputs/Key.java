@@ -39,9 +39,10 @@ public record Key(int code) {
     return VALID_CODES.contains(this.code);
   }
 
-  @Override 
+  @Override
   public String toString() {
-    if (code == -1) return "Key(none)";
+    if (code == -1)
+      return "Key(none)";
     return "Key(" + code + ")";
   }
 }

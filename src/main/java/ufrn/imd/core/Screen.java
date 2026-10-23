@@ -4,6 +4,6 @@ import java.util.List;
 
 public record Screen(
   int columns,
-  int rows, 
+  int rows,
   List<String> content
 ) {}
