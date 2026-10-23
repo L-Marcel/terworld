@@ -7,12 +7,17 @@ import org.jline.terminal.TerminalBuilder;
 import org.jline.utils.InfoCmp.Capability;
 import ufrn.imd.core.Game;
 import ufrn.imd.core.Window;
+import ufrn.imd.core.constants.Ticks;
 import ufrn.imd.inputs.Key;
 import ufrn.imd.inputs.KeyListener;
 
 public class Main {
   public static void main(String[] args) throws IOException, URISyntaxException {
-    Clock clock = new Clock(1, 8);
+    Clock clock = new Clock(
+      Ticks.MAX_TICKS_PER_SECOND,
+      Ticks.MAX_FORCED_TICKS_PER_SECOND
+    );
+
     Loader loader = new Loader();
     Game game = new Game();
 

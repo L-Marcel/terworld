@@ -1,17 +1,8 @@
 package ufrn.imd.inputs;
 
-import java.util.Set;
+import ufrn.imd.core.constants.Keys;
 
 public record Key(int code) {
-  private static final Set<Integer> VALID_CODES = Set.of(
-    3, // Control + C
-    (int) 'a',
-    (int) 's',
-    (int) 'd',
-    (int) 'j',
-    (int) 'k',
-    (int) 'l'
-  );
 
   public static Key none() {
     return new Key(-1);
@@ -36,7 +27,7 @@ public record Key(int code) {
   }
 
   public boolean isValid() {
-    return VALID_CODES.contains(this.code);
+    return Keys.VALIDS.contains(this.code);
   }
 
   @Override

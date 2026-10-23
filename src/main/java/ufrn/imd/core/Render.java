@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import ufrn.imd.core.abstractions.Node;
 import ufrn.imd.core.abstractions.Node2D;
+import ufrn.imd.core.constants.Rendering;
 
 public class Render {
-  private static final int BOTTOM_OFFSET = 6;
-
   private final Level level;
   private char[][] map;
 
@@ -60,7 +59,7 @@ public class Render {
     Vector2 origin = this.level.player().getPosition();
 
     int offsetX = width / 3;
-    int offsetY = Math.max(0, height - 1 - BOTTOM_OFFSET);
+    int offsetY = Math.max(0, height - 1 - Rendering.WINDOW_BOTTOM_OFFSET);
 
     int left = Math.max(0, Math.min(origin.x() - offsetX, this.level.width() - width));
     int top = Math.max(0, Math.min(origin.y() - offsetY, this.level.height() - height));
