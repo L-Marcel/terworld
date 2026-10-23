@@ -9,7 +9,7 @@ public class Player extends Node2D {
   private Sword sword;
 
   public Player(Vector2 position) {
-    super(position);
+    super(position, 2);
     this.sword = new Sword(position.sum(1, 0));
     this.addChild(this.sword);
   }

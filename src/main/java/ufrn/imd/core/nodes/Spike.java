@@ -5,7 +5,7 @@ import ufrn.imd.core.abstractions.Node2D;
 
 public class Spike extends Node2D {
   public Spike(Vector2 position) {
-    super(position);
+    super(position, Integer.MAX_VALUE);
   }
 
   @Override

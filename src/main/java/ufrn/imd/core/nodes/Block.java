@@ -5,7 +5,7 @@ import ufrn.imd.core.abstractions.Node2D;
 
 public class Block extends Node2D {
   public Block(Vector2 position) {
-    super(position);
+    super(position, Integer.MAX_VALUE);
   }
 
   @Override

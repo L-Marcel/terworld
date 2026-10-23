@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Queue;
 import ufrn.imd.core.abstractions.Node;
 import ufrn.imd.core.abstractions.Node2D;
+import ufrn.imd.core.constants.Comparators;
 import ufrn.imd.inputs.Key;
 
 public class Game {
@@ -24,8 +25,9 @@ public class Game {
     if (!this.levels.isEmpty())
       level = this.levels.poll();
 
-    this.nodes = level.nodes();
     this.render = new Render(level);
+    this.nodes = level.nodes();
+    this.nodes.sort(Comparators.BY_LAYER);
   }
 
   public void process(Key key) {
