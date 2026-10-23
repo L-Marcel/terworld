@@ -69,7 +69,7 @@ public class Loader {
 
       for (int column = 0; column < characters.length; column++) {
         char character = characters[column];
-        content[row][column] = character;
+        content[row][column] = ' ';
 
         switch (character) {
           case 'O':
@@ -82,6 +82,7 @@ public class Loader {
           case '?':
             break;
           default:
+            content[row][column] = character;
             break;
         }
       }

@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.utils.InfoCmp.Capability;
+import ufrn.imd.core.Camera;
 import ufrn.imd.core.Game;
 import ufrn.imd.core.Screen;
 import ufrn.imd.inputs.Key;

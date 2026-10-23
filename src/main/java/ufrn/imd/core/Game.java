@@ -10,19 +10,23 @@ import ufrn.imd.inputs.Key;
 public class Game {
   private Queue<Level> levels;
   private List<Node> nodes;
-  private Level current;
+  private Level level;
+
+  private char[][] map;
 
   public void nextLevel() {
-    if (!this.levels.isEmpty())
-      this.current = this.levels.poll();
+    Level level = Level.empty();
 
-    if (this.current != null) {
-      // this.current.player();
-      this.nodes = this.current.nodes();
-    }
+    if (!this.levels.isEmpty())
+      level = this.levels.poll();
+
+    this.level = level;
+    this.map = level.content().clone();
+    this.nodes = level.nodes();
   }
 
   public void process(Key key) {
+    this.map = this.level.content().clone();
     for (Node node : this.nodes) {
       node.process(key);
       if (node instanceof Node2D node2d)
@@ -31,18 +35,36 @@ public class Game {
   }
 
   public void render(Node2D node2d) {
+    Vector2 position = node2d.getPosition();
+    char shape = node2d.getShape();
 
+    int height = this.level.height();
+    int width = this.level.width();
+
+    boolean isValidX = position.x() >= 0 && position.x() < width;
+    boolean isValidY = position.y() >= 0 && position.y() < height;
+
+    if (isValidX && isValidY)
+      this.map[position.y()][position.x()] = shape;
   }
 
   public Screen getScreen(int columns, int rows) {
-    List<String> screen = new ArrayList<>(rows);
+    int height = this.level.height();
+    int width = this.level.width();
 
-    if (this.current != null)
-      for (char[] row : this.current.content()) {
-        screen.add(new String(row));
+    List<String> screen = new ArrayList<>(height);
+
+    for (int row = 0; row < height; row++) {
+      StringBuilder builder = new StringBuilder();
+
+      for (int column = 0; column < width; column++) {
+        builder.append(this.map[row][column]);
       }
 
-    return new Screen(columns, rows, screen);
+      screen.add(builder.toString());
+    }
+
+    return new Screen(width, height, screen);
   }
 
   public void setLevels(Queue<Level> levels) {
