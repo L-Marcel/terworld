@@ -1,0 +1,25 @@
+{
+  "java.format.enabled": true,
+  "java.format.settings.url": "./formatter.xml",
+  "[java]": {
+    "editor.defaultFormatter": "redhat.java"
+  },
+  "editor.tabSize": 2,
+  "[markdown]": {
+    "editor.tabSize": 4,
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": false,
+      "strings": true
+    }
+  },
+  "java.autobuild.enabled": true,
+  "java.trace.server": "verbose",
+  "java.jdt.ls.vmargs": "-Xmx4G",
+  "java.compile.nullAnalysis.mode": "disabled",
+  "java.configuration.updateBuildConfiguration": "interactive",
+  "editor.formatOnSave": true,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+  "java.format.comments.enabled": true
+}
