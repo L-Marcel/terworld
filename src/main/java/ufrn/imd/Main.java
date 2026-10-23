@@ -12,7 +12,7 @@ import ufrn.imd.inputs.KeyListener;
 
 public class Main {
   public static void main(String[] args) throws IOException, URISyntaxException {
-    Clock clock = new Clock(1, 4);
+    Clock clock = new Clock(1, 8);
     Loader loader = new Loader();
     Game game = new Game();
 
@@ -38,32 +38,47 @@ public class Main {
 
       terminal.puts(Capability.enter_ca_mode);
 
-      while (!Thread.currentThread().isInterrupted()) {
-        clock.lock();
+      try {
+        terminal.puts(Capability.cursor_invisible);
+        terminal.flush();
 
-        try {
-          if (clock.isTick()) {
-            terminal.puts(Capability.clear_screen);
-            terminal.flush();
+        while (!Thread.currentThread().isInterrupted()) {
+          clock.lock();
 
-            if (listener.getPressedKey().is(3))
-              break;
+          try {
+            if (clock.isTick()) {
+              terminal.puts(Capability.clear_screen);
+              terminal.flush();
 
-            game.process(listener.getPressedKey());
+              if (listener.getPressedKey().is(3))
+                break;
 
-            Window window = game.getWindow(
-              terminal.getColumns(),
-              terminal.getRows()
-            );
+              game.process(listener.getPressedKey());
 
-            window.content().forEach(terminal.writer()::println);
-            terminal.writer().flush();
+              Window window = game.getWindow(
+                terminal.getColumns(),
+                terminal.getRows()
+              );
 
-            listener.setPressedKey(Key.none());
+              for (int i = 0; i < window.content().size(); i++) {
+                String line = window.content().get(i);
+                if (i < window.content().size() - 1) {
+                  terminal.writer().println(line);
+                } else {
+                  terminal.writer().print(line);
+                }
+              }
+
+              terminal.writer().flush();
+              listener.setPressedKey(Key.none());
+            }
+          } finally {
+            clock.unlock();
           }
-        } finally {
-          clock.unlock();
         }
+      } finally {
+        terminal.puts(Capability.cursor_normal);
+        terminal.flush();
       }
     }
   }

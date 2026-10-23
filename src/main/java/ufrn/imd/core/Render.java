@@ -56,12 +56,21 @@ public class Render {
     int left = Math.max(0, Math.min(origin.x() - offsetX, this.level.width() - width));
     int top = Math.max(0, Math.min(origin.y() - offsetY, this.level.height() - height));
 
-    List<String> screen = new ArrayList<>(height);
+    int paddingTop = rows - height;
+
+    List<String> screen = new ArrayList<>(rows);
+
+    if (paddingTop > 0) {
+      String blankLine = " ".repeat(width);
+      for (int row = 0; row < paddingTop; row++) {
+        screen.add(blankLine);
+      }
+    }
 
     for (int row = top; row < top + height; row++) {
       screen.add(new String(this.map[row], left, width));
     }
 
-    return new Window(width, height, screen);
+    return new Window(width, rows, screen);
   }
 }
