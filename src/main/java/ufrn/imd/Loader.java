@@ -15,6 +15,7 @@ import java.util.stream.Stream;
 import ufrn.imd.core.Level;
 import ufrn.imd.core.Vector2;
 import ufrn.imd.core.abstractions.Node;
+import ufrn.imd.core.nodes.Block;
 import ufrn.imd.core.nodes.EndOfLevel;
 import ufrn.imd.core.nodes.Enemy;
 import ufrn.imd.core.nodes.Player;
@@ -104,6 +105,10 @@ public class Loader {
       }
     }
 
+    nodes.addAll(
+      this.loadBlocks(content)
+    );
+
     return new Level(
       width,
       height,
@@ -111,5 +116,40 @@ public class Loader {
       player,
       nodes
     );
+  }
+
+  public List<Block> loadBlocks(char[][] content) {
+    List<Block> blocks = new ArrayList<>();
+
+    for (int row = 0; row < content.length; row++) {
+      for (int column = 0; column < content[row].length; column++) {
+        char character = content[row][column];
+
+        if (character == '#') {
+          int neighbors = 0;
+
+          for (int dy = -1; dy <= 1; dy++) {
+            for (int dx = -1; dx <= 1; dx++) {
+              int nx = column + dx;
+              int ny = row + dy;
+
+              if (Math.abs(dx) == Math.abs(dy))
+                continue;
+
+              if (ny < 0 || ny >= content.length || nx < 0 || nx >= content[0].length)
+                continue;
+
+              if (content[ny][nx] == '#')
+                neighbors++;
+            }
+          }
+
+          if (neighbors < 4)
+            blocks.add(new Block(new Vector2(column, row)));
+        }
+      }
+    }
+
+    return blocks;
   }
 }
