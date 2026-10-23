@@ -4,8 +4,7 @@ import java.util.Set;
 
 public record Key(int code) {
   private static final Set<Integer> VALID_CODES = Set.of(
-    -1, // EOF
-    3,  // Control + C
+    3, // Control + C
     (int) 'a',
     (int) 's',
     (int) 'd',
