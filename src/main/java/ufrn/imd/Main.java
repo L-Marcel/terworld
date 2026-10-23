@@ -31,6 +31,8 @@ public class Main {
         }
       });
 
+      terminal.puts(Capability.enter_ca_mode);
+
       while (!Thread.currentThread().isInterrupted()) {
         clock.lock();
 
