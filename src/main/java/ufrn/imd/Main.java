@@ -1,18 +1,26 @@
 package ufrn.imd;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Queue;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.utils.InfoCmp.Capability;
 import ufrn.imd.core.Game;
+import ufrn.imd.core.Level;
 import ufrn.imd.core.Screen;
 import ufrn.imd.inputs.Key;
 import ufrn.imd.inputs.KeyListener;
 
 public class Main {
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) throws IOException, URISyntaxException {
     Clock clock = new Clock(1, 4);
+    Loader loader = new Loader();
     Game game = new Game();
+
+    Queue<Level> levels = loader.load();
+    game.setLevels(levels);
+    game.nextLevel();
 
     try (
     //@formatter:off
