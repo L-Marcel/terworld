@@ -5,9 +5,8 @@ import java.net.URISyntaxException;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.utils.InfoCmp.Capability;
-import ufrn.imd.core.Camera;
 import ufrn.imd.core.Game;
-import ufrn.imd.core.Screen;
+import ufrn.imd.core.Window;
 import ufrn.imd.inputs.Key;
 import ufrn.imd.inputs.KeyListener;
 
@@ -52,12 +51,12 @@ public class Main {
 
             game.process(listener.getPressedKey());
 
-            Screen screen = game.getScreen(
+            Window window = game.getWindow(
               terminal.getColumns(),
               terminal.getRows()
             );
 
-            screen.content().forEach(terminal.writer()::println);
+            window.content().forEach(terminal.writer()::println);
             terminal.writer().flush();
 
             listener.setPressedKey(Key.none());
