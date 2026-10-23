@@ -6,13 +6,16 @@ import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.stream.Stream;
 import ufrn.imd.core.Level;
+import ufrn.imd.core.Vector2;
+import ufrn.imd.core.interfaces.Node;
+import ufrn.imd.core.nodes.Player;
 
 public class Loader {
   public Queue<Level> load() throws IOException, URISyntaxException {
@@ -52,6 +55,8 @@ public class Loader {
 
   private Level loadLevel(Path file) throws IOException {
     List<String> lines = Files.readAllLines(file);
+    List<Node> nodes = new ArrayList<>();
+    Player player = new Player(Vector2.ZERO);
 
     int width = lines.stream().mapToInt(String::length).max().orElse(0);
     int height = lines.size();
@@ -60,10 +65,38 @@ public class Loader {
 
     for (int row = 0; row < height; row++) {
       String line = lines.get(row);
-      Arrays.fill(content[row], ' ');
-      line.getChars(0, line.length(), content[row], 0);
+      char[] characters = line.toCharArray();
+
+      for (int column = 0; column < characters.length; column++) {
+        char character = characters[column];
+        content[row][column] = character;
+
+        switch (character) {
+          case 'O':
+            player = new Player(new Vector2(column, row));
+            nodes.add(player);
+            break;
+          case 'E':
+            // TODO - Enemy
+            break;
+          case '?':
+            break;
+          default:
+            break;
+        }
+      }
+
+      for (int column = characters.length; column < width; column++) {
+        content[row][column] = ' ';
+      }
     }
 
-    return new Level(width, height, content);
+    return new Level(
+      width,
+      height,
+      content,
+      player,
+      nodes
+    );
   }
 }

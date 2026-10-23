@@ -10,12 +10,16 @@ import ufrn.imd.inputs.Key;
 public class Game {
   private Queue<Level> levels;
   private List<Node> nodes;
-  private Node2D player;
   private Level current;
 
   public void nextLevel() {
     if (!this.levels.isEmpty())
       this.current = this.levels.poll();
+
+    if (this.current != null) {
+      // this.current.player();
+      this.nodes = this.current.nodes();
+    }
   }
 
   public void process(Key key) {
