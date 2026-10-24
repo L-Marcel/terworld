@@ -17,28 +17,30 @@ public class Player extends Body2D {
 
   @Override
   public void process(Key key, Physics physics) {
-    Vector2 velocity = Vector2.ZERO;
+    Vector2 velocity = this.getVelocity();
 
     switch (key.code()) {
-      case 'w':
-        velocity = new Vector2(0, -1);
+      case 'k':
+        this.setVelocity(velocity.withX(0));
+        this.jump(physics);
         break;
       case 's':
-        velocity = new Vector2(0, 1);
+        this.setVelocity(velocity.withY(1));
         break;
       case 'a':
-        velocity = new Vector2(-1, 0);
+        this.setVelocity(velocity.withX(-1));
         this.flipped = true;
         break;
       case 'd':
-        velocity = new Vector2(1, 0);
+        this.setVelocity(velocity.sum(0, 1));
         this.flipped = false;
         break;
       default:
+        this.setVelocity(velocity.withX(0));
         break;
     }
 
-    this.move(velocity, physics);
+    super.process(key, physics);
     this.sword.setFlipped(this.flipped);
     this.sword.setPosition(
       this.position.sum(this.flipped ? -1 : 1, 0)

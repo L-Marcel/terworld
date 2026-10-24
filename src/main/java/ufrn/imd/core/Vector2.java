@@ -16,4 +16,16 @@ public record Vector2(
       this.y + vector.y
     );
   }
+
+  public Vector2 withX(int x) {
+    return new Vector2(x, this.y);
+  }
+
+  public Vector2 withY(int y) {
+    return new Vector2(this.x, y);
+  }
+
+  public Vector2 of(int x, int y) {
+    return new Vector2(x, y);
+  }
 }

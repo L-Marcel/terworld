@@ -17,6 +17,7 @@ public class Enemy extends Body2D {
 
   @Override
   public void process(Key key, Physics physics) {
+    super.process(key, physics);
     this.sword.setFlipped(this.flipped);
     this.sword.setPosition(
       this.position.sum(this.flipped ? -1 : 1, 0)

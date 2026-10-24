@@ -2,13 +2,40 @@ package ufrn.imd.core.abstractions;
 
 import ufrn.imd.core.Physics;
 import ufrn.imd.core.Vector2;
+import ufrn.imd.core.constants.Forces;
+import ufrn.imd.inputs.Key;
 
 public abstract class Body2D extends Node2D {
+  private Vector2 velocity;
+
   public Body2D(Vector2 position, int layer) {
     super(position, layer);
+    this.velocity = Vector2.ZERO;
   }
 
-  protected final void move(Vector2 velocity, Physics physics) {
-    this.position = physics.move(this, velocity);
+  protected final void move(Physics physics) {
+    this.position = physics.move(this, this.velocity);
+  }
+
+  protected final void jump(Physics physics) {
+    if (this.velocity.y() >= 0 && physics.isGrounded(this))
+      this.velocity = this.velocity.withY(Forces.JUMP_HEIGHT);
+  }
+
+  @Override
+  public void process(Key key, Physics physics) {
+    this.move(physics);
+    if (!physics.isGrounded(this))
+      this.velocity = this.velocity.sum(0, Forces.GRAVITY);
+    else
+      this.velocity = this.velocity.withY(0);
+  }
+
+  public void setVelocity(Vector2 velocity) {
+    this.velocity = velocity;
+  }
+
+  public Vector2 getVelocity() {
+    return this.velocity;
   }
 }

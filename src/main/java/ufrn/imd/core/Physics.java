@@ -20,6 +20,10 @@ public class Physics {
     return this.resolveAxis(body, position, velocity.y(), false);
   }
 
+  public boolean isGrounded(Body2D body) {
+    return !body.isFreePending() && this.isBlocked(body.getPosition().sum(0, 1), body);
+  }
+
   private Vector2 resolveAxis(
     Body2D body,
     Vector2 position,
