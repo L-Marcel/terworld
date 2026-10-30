@@ -14,6 +14,7 @@ public class Render {
 
   public Render(Level level) {
     this.level = level;
+    this.reset();
   }
 
   public void render(List<Node> nodes) {
@@ -62,7 +63,7 @@ public class Render {
     }
   }
 
-  public Window getWindow(int columns, int rows) {
+  public Window getWindow(int columns, int rows, boolean won) {
     if (columns <= 0 || rows <= 0)
       return new Window(0, 0, List.of());
 
@@ -80,8 +81,17 @@ public class Render {
     int paddingTop = rows - 1 - height;
 
     List<String> screen = new ArrayList<>(rows);
-    String status = this.getStatus();
-    screen.add(status.substring(0, Math.min(columns, status.length())));
+
+    String status = this.getStatus(won);
+    screen.add(
+      status.substring(
+        0,
+        Math.min(
+          columns,
+          status.length()
+        )
+      )
+    );
 
     if (paddingTop > 0) {
       String blankLine = " ".repeat(width);
@@ -97,12 +107,17 @@ public class Render {
     return new Window(columns, rows, screen);
   }
 
-  private String getStatus() {
+  private String getStatus(boolean won) {
+    if (won)
+      return "Vitoria! Todas as fases concluidas.";
+
     Player player = this.level.player();
     String status = "HP: " + player.getHp() + "/" + Player.MAX_HP;
 
     if (player.isDead())
       return status + " | Derrota";
+    if (player.hasCompletedLevel())
+      return status + " | Fase concluida";
     if (player.isProtected())
       return status + " | Protegido";
 

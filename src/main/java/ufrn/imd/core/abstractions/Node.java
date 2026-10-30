@@ -3,8 +3,8 @@ package ufrn.imd.core.abstractions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import ufrn.imd.core.Action;
 import ufrn.imd.core.Physics;
-import ufrn.imd.inputs.Key;
 
 public abstract class Node {
   private boolean freeIsPending = false;
@@ -40,5 +40,5 @@ public abstract class Node {
     return this.children;
   }
 
-  public void process(Key key, Physics physics) {}
+  public void process(Action action, Physics physics) {}
 }

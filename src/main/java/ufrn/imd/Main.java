@@ -2,6 +2,9 @@ package ufrn.imd;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.locks.LockSupport;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.utils.InfoCmp.Capability;
@@ -10,6 +13,7 @@ import ufrn.imd.core.Window;
 import ufrn.imd.core.constants.Ticks;
 import ufrn.imd.inputs.Key;
 import ufrn.imd.inputs.KeyListener;
+import ufrn.imd.inputs.Keys;
 
 public class Main {
   public static void main(String[] args) throws IOException, URISyntaxException {
@@ -58,16 +62,38 @@ public class Main {
               if (listener.getPressedKey().is(3))
                 break;
 
-              game.process(listener.getPressedKey());
+              game.process(listener.getPressedKey().toAction());
+
+              int columns = terminal.getColumns();
+              int rows = terminal.getRows();
+              boolean showHelp = rows >= 3;
 
               Window window = game.getWindow(
-                terminal.getColumns(),
-                terminal.getRows()
+                columns,
+                rows - (showHelp ? 1 : 0)
               );
 
-              for (int i = 0; i < window.content().size(); i++) {
-                String line = window.content().get(i);
-                if (i < window.content().size() - 1) {
+              List<String> lines = new ArrayList<>(
+                window.content()
+              );
+
+              if (showHelp)
+                lines.add(
+                  Keys.HELP.substring(
+                    0,
+                    Math.max(
+                      0,
+                      Math.min(
+                        columns,
+                        Keys.HELP.length()
+                      )
+                    )
+                  )
+                );
+
+              for (int i = 0; i < lines.size(); i++) {
+                String line = lines.get(i);
+                if (i < lines.size() - 1) {
                   terminal.writer().println(line);
                 } else {
                   terminal.writer().print(line);
@@ -76,15 +102,24 @@ public class Main {
 
               terminal.writer().flush();
               listener.setPressedKey(Key.none());
+
+              if (game.isWon())
+                break;
             }
           } finally {
             clock.unlock();
           }
+
+          LockSupport.parkNanos(1_000_000);
         }
       } finally {
         terminal.puts(Capability.cursor_normal);
+        terminal.puts(Capability.exit_ca_mode);
         terminal.flush();
       }
     }
+
+    if (game.isWon())
+      System.out.println("Voce venceu todas as fases!");
   }
 }

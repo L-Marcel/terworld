@@ -1,14 +1,15 @@
 package ufrn.imd.core.nodes;
 
+import ufrn.imd.core.Action;
 import ufrn.imd.core.Physics;
 import ufrn.imd.core.Vector2;
 import ufrn.imd.core.abstractions.Body2D;
-import ufrn.imd.inputs.Key;
 
 public class Player extends Body2D {
   public static final int MAX_HP = 4;
   private int hp = MAX_HP;
   private int damageProtectionTicks = 0;
+  private boolean levelCompleted = false;
   private boolean flipped = false;
   private Sword sword;
 
@@ -26,6 +27,15 @@ public class Player extends Body2D {
     return this.hp == 0;
   }
 
+  public boolean hasCompletedLevel() {
+    return this.levelCompleted;
+  }
+
+  public void completeLevel() {
+    if (!this.isDead())
+      this.levelCompleted = true;
+  }
+
   public boolean isProtected() {
     return this.damageProtectionTicks > 0;
   }
@@ -36,7 +46,10 @@ public class Player extends Body2D {
   }
 
   public void takeDamage() {
-    if (this.isDead() || this.isProtected() || this.isFreePending())
+    if (this.isDead() ||
+      this.hasCompletedLevel() ||
+      this.isProtected() ||
+      this.isFreePending())
       return;
 
     this.hp--;
@@ -48,22 +61,22 @@ public class Player extends Body2D {
   }
 
   @Override
-  public void process(Key key, Physics physics) {
+  public void process(Action action, Physics physics) {
     Vector2 velocity = this.getVelocity();
 
-    switch (key.code()) {
-      case 'k':
+    switch (action) {
+      case JUMP:
         this.setVelocity(velocity.withX(0));
         this.jump(physics);
         break;
-      case 's':
+      case DROP:
         this.setVelocity(velocity.withY(1));
         break;
-      case 'a':
+      case LEFT:
         this.setVelocity(velocity.withX(-1));
         this.flipped = true;
         break;
-      case 'd':
+      case RIGHT:
         this.setVelocity(velocity.withX(1));
         this.flipped = false;
         break;
@@ -72,13 +85,13 @@ public class Player extends Body2D {
         break;
     }
 
-    super.process(key, physics);
+    super.process(action, physics);
     this.sword.setFlipped(this.flipped);
     this.sword.setPosition(
       this.position.sum(this.flipped ? -1 : 1, 0)
     );
 
-    if (key.is('j'))
+    if (action == Action.ATTACK)
       this.sword.attack();
   }
 

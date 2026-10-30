@@ -1,6 +1,6 @@
 package ufrn.imd.inputs;
 
-import ufrn.imd.core.constants.Keys;
+import ufrn.imd.core.Action;
 
 public record Key(int code) {
 
@@ -28,6 +28,17 @@ public record Key(int code) {
 
   public boolean isValid() {
     return Keys.VALIDS.contains(this.code);
+  }
+
+  public Action toAction() {
+    return switch (this.code) {
+      case 'a' -> Action.LEFT;
+      case 'd' -> Action.RIGHT;
+      case 'k' -> Action.JUMP;
+      case 's' -> Action.DROP;
+      case 'j' -> Action.ATTACK;
+      default -> Action.NONE;
+    };
   }
 
   @Override

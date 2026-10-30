@@ -1,11 +1,11 @@
 package ufrn.imd.core.nodes;
 
 import java.util.List;
+import ufrn.imd.core.Action;
 import ufrn.imd.core.Physics;
 import ufrn.imd.core.Vector2;
 import ufrn.imd.core.abstractions.Body2D;
 import ufrn.imd.core.abstractions.Node2D;
-import ufrn.imd.inputs.Key;
 
 public class Sword extends Node2D {
   private boolean flipped = false;
@@ -24,7 +24,7 @@ public class Sword extends Node2D {
   }
 
   @Override
-  public void process(Key key, Physics physics) {
+  public void process(Action action, Physics physics) {
     this.tip.setPosition(this.position.sum(this.flipped ? -1 : 1, 0));
     this.tip.setFlipped(this.flipped);
     this.attacking = this.attackRequested && this.recoveryTicks == 0;

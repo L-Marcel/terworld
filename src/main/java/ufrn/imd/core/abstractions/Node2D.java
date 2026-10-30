@@ -23,5 +23,7 @@ public abstract class Node2D extends Node {
     return this.position;
   }
 
+  public void onContact(Body2D body) {}
+
   public abstract char getShape();
 }
