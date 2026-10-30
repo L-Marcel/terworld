@@ -6,6 +6,7 @@ import ufrn.imd.core.abstractions.Node;
 import ufrn.imd.core.abstractions.Node2D;
 import ufrn.imd.core.constants.Comparators;
 import ufrn.imd.core.constants.Rendering;
+import ufrn.imd.core.nodes.Player;
 
 public class Render {
   private final Level level;
@@ -62,11 +63,11 @@ public class Render {
   }
 
   public Window getWindow(int columns, int rows) {
-    int width = Math.max(0, Math.min(columns, this.level.width()));
-    int height = Math.max(0, Math.min(rows, this.level.height()));
-
-    if (width == 0 || height == 0)
+    if (columns <= 0 || rows <= 0)
       return new Window(0, 0, List.of());
+
+    int width = Math.min(columns, this.level.width());
+    int height = Math.min(rows - 1, this.level.height());
 
     Vector2 origin = this.level.player().getPosition();
 
@@ -76,9 +77,11 @@ public class Render {
     int left = Math.max(0, Math.min(origin.x() - offsetX, this.level.width() - width));
     int top = Math.max(0, Math.min(origin.y() - offsetY, this.level.height() - height));
 
-    int paddingTop = rows - height;
+    int paddingTop = rows - 1 - height;
 
     List<String> screen = new ArrayList<>(rows);
+    String status = this.getStatus();
+    screen.add(status.substring(0, Math.min(columns, status.length())));
 
     if (paddingTop > 0) {
       String blankLine = " ".repeat(width);
@@ -91,6 +94,18 @@ public class Render {
       screen.add(new String(this.map[row], left, width));
     }
 
-    return new Window(width, rows, screen);
+    return new Window(columns, rows, screen);
+  }
+
+  private String getStatus() {
+    Player player = this.level.player();
+    String status = "HP: " + player.getHp() + "/" + Player.MAX_HP;
+
+    if (player.isDead())
+      return status + " | Derrota";
+    if (player.isProtected())
+      return status + " | Protegido";
+
+    return status;
   }
 }

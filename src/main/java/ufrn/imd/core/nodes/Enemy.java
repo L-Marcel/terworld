@@ -18,10 +18,28 @@ public class Enemy extends Body2D {
   @Override
   public void process(Key key, Physics physics) {
     super.process(key, physics);
+    this.attackIfPlayerInRange(physics);
     this.sword.setFlipped(this.flipped);
     this.sword.setPosition(
       this.position.sum(this.flipped ? -1 : 1, 0)
     );
+  }
+
+  private void attackIfPlayerInRange(Physics physics) {
+    for (int direction = -1; direction <= 1; direction += 2) {
+      for (int distance = 1; distance <= 2; distance++) {
+        Vector2 position = this.position.sum(direction * distance, 0);
+
+        if (physics.isSolid(position))
+          break;
+
+        if (physics.getBodyAt(position, this).filter(Player.class::isInstance).isPresent()) {
+          this.flipped = direction < 0;
+          this.sword.attack();
+          return;
+        }
+      }
+    }
   }
 
   @Override

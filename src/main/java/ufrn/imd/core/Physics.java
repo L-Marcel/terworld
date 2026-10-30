@@ -1,5 +1,6 @@
 package ufrn.imd.core;
 
+import java.util.Optional;
 import ufrn.imd.core.abstractions.Body2D;
 import ufrn.imd.core.abstractions.Node;
 
@@ -24,6 +25,22 @@ public class Physics {
     return !body.isFreePending() && this.isBlocked(body.getPosition().sum(0, 1), body);
   }
 
+  public boolean isSolid(Vector2 position) {
+    return position.x() < 0 || position.y() < 0
+      || position.x() >= this.level.width() || position.y() >= this.level.height()
+      || this.level.content()[position.y()][position.x()] == '#';
+  }
+
+  public Optional<Body2D> getBodyAt(Vector2 position, Body2D ignored) {
+    for (Node node : this.level.nodes()) {
+      Optional<Body2D> body = this.findBody(node, position, ignored);
+      if (body.isPresent())
+        return body;
+    }
+
+    return Optional.empty();
+  }
+
   private Vector2 resolveAxis(
     Body2D body,
     Vector2 position,
@@ -45,33 +62,22 @@ public class Physics {
   }
 
   private boolean isBlocked(Vector2 position, Body2D movingBody) {
-    if (position.x() < 0 || position.y() < 0
-      || position.x() >= this.level.width() || position.y() >= this.level.height())
-      return true;
-
-    if (this.level.content()[position.y()][position.x()] == '#')
-      return true;
-
-    for (Node node : this.level.nodes()) {
-      if (this.isOccupied(node, position, movingBody))
-        return true;
-    }
-
-    return false;
+    return this.isSolid(position) || this.getBodyAt(position, movingBody).isPresent();
   }
 
-  private boolean isOccupied(Node node, Vector2 position, Body2D movingBody) {
+  private Optional<Body2D> findBody(Node node, Vector2 position, Body2D ignored) {
     if (node.isFreePending())
-      return false;
+      return Optional.empty();
 
-    if (node != movingBody && node instanceof Body2D body && body.getPosition().equals(position))
-      return true;
+    if (node != ignored && node instanceof Body2D body && body.getPosition().equals(position))
+      return Optional.of(body);
 
     for (Node child : node.getChildren()) {
-      if (this.isOccupied(child, position, movingBody))
-        return true;
+      Optional<Body2D> body = this.findBody(child, position, ignored);
+      if (body.isPresent())
+        return body;
     }
 
-    return false;
+    return Optional.empty();
   }
 }

@@ -8,39 +8,46 @@ import ufrn.imd.inputs.Key;
 
 public class Game {
   private Queue<Level> levels;
+  private Level initialLevel;
+  private Level level;
   private List<Node> nodes;
   private Render render;
   private Physics physics;
 
   public Game() {
-    Level level = Level.empty();
-    this.render = new Render(level);
-    this.physics = new Physics(level);
+    this.initialLevel = Level.empty();
     this.levels = new LinkedList<>();
-    this.nodes = new LinkedList<>();
+    this.loadLevel(this.initialLevel.copy());
   }
 
   public void nextLevel() {
-    Level level = Level.empty();
+    this.initialLevel = this.levels.isEmpty() ? Level.empty() : this.levels.poll();
+    this.loadLevel(this.initialLevel.copy());
+  }
 
-    if (!this.levels.isEmpty())
-      level = this.levels.poll();
-
+  private void loadLevel(Level level) {
+    this.level = level;
     this.render = new Render(level);
     this.physics = new Physics(level);
     this.nodes = level.nodes();
   }
 
   public void process(Key key) {
-    for (Node node : this.nodes) {
-      this.process(node, key);
-    }
+    if (this.level.player().isDead()) {
+      this.loadLevel(this.initialLevel.copy());
+    } else {
+      this.level.player().tickDamageProtection();
 
-    for (Node node : this.nodes) {
-      this.freeQueued(node);
-    }
+      for (Node node : this.nodes) {
+        this.process(node, key);
+      }
 
-    this.nodes.removeIf(Node::isFreePending);
+      for (Node node : this.nodes) {
+        this.freeQueued(node);
+      }
+
+      this.nodes.removeIf(Node::isFreePending);
+    }
 
     this.render.reset();
     this.render.render(this.nodes);
