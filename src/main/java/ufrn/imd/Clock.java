@@ -1,9 +1,11 @@
 package ufrn.imd;
 
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Clock {
   private final ReentrantLock reetrantLock;
+  private final Condition tickRequested;
   private final double forcedTickInterval;
   private long lastForcedTick;
   private final double tickInterval;
@@ -13,6 +15,7 @@ public class Clock {
   public Clock(double ticksPerSecond, double forcedTicksPerSecond) {
     long now = System.nanoTime();
     this.reetrantLock = new ReentrantLock();
+    this.tickRequested = this.reetrantLock.newCondition();
     this.tickInterval = 1000.0 / ticksPerSecond;
     this.forcedTickInterval = 1000.0 / forcedTicksPerSecond;
     this.lastTick = now - (long) Math.ceil(this.tickInterval * 1_000_000.0);
@@ -38,7 +41,28 @@ public class Clock {
       if (diff >= this.forcedTickInterval) {
         this.forceTick = true;
         this.lastForcedTick = now;
+        this.tickRequested.signal();
       }
+    } finally {
+      this.unlock();
+    }
+  }
+
+  public void awaitNextTick() {
+    this.lock();
+
+    try {
+      while (!this.forceTick) {
+        long remaining = (long) Math.ceil(this.tickInterval * 1_000_000.0)
+          - (System.nanoTime() - this.lastTick);
+
+        if (remaining <= 0)
+          return;
+
+        this.tickRequested.awaitNanos(remaining);
+      }
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
     } finally {
       this.unlock();
     }
