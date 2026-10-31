@@ -8,7 +8,7 @@ import ufrn.imd.core.physics.Vector2;
 public abstract class Body2D extends Node2D {
   private Vector2 velocity;
 
-  public Body2D(Vector2 position, int layer) {
+  protected Body2D(Vector2 position, int layer) {
     super(position, layer);
     this.velocity = Vector2.ZERO;
   }

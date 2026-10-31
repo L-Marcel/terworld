@@ -6,11 +6,12 @@ public abstract class Node2D extends Node {
   protected int layer;
   protected Vector2 position;
 
-  public Node2D(Vector2 position) {
+  protected Node2D(Vector2 position) {
     this(position, 0);
   }
 
-  public Node2D(Vector2 position, int layer) {
+  protected Node2D(Vector2 position, int layer) {
+    super();
     this.position = position;
     this.layer = layer;
   }

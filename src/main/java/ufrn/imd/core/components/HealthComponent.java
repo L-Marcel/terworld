@@ -1,10 +1,11 @@
 package ufrn.imd.core.components;
 
+import ufrn.imd.core.constants.Health;
+
 public class HealthComponent {
-  private static final int DAMAGE_PROTECTION_TICKS = 3;
+  private int protectionTicks = 0;
   private final int maxHp;
   private int hp;
-  private int protectionTicks = 0;
 
   public HealthComponent(int maxHp) {
     maxHp = Math.max(1, maxHp);
@@ -23,7 +24,7 @@ public class HealthComponent {
 
     this.hp--;
     if (!this.isDead())
-      this.protectionTicks = DAMAGE_PROTECTION_TICKS;
+      this.protectionTicks = Health.DAMAGE_PROTECTION_TICKS;
     return true;
   }
 

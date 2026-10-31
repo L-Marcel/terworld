@@ -1,25 +1,26 @@
 package ufrn.imd.core.rendering;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import ufrn.imd.core.Level;
 import ufrn.imd.core.Scene;
 import ufrn.imd.core.abstractions.Node;
 import ufrn.imd.core.abstractions.Node2D;
+import ufrn.imd.core.constants.Comparators;
 import ufrn.imd.core.physics.Vector2;
 
 public class Render {
-  private static final Comparator<Node2D> BY_LAYER = Comparator.comparingInt(Node2D::getLayer);
   private final Level level;
   private final Scene scene;
-  private final Camera camera = new Camera();
-  private final Hud hud = new Hud();
+  private final Camera camera;
+  private final Hud hud;
   private char[][] map;
 
   public Render(Level level, Scene scene) {
     this.level = level;
     this.scene = scene;
+    this.camera = new Camera();
+    this.hud = new Hud();
     this.reset();
   }
 
@@ -32,7 +33,7 @@ public class Render {
         visible.add(node2d);
     }
 
-    visible.sort(BY_LAYER);
+    visible.sort(Comparators.BY_LAYER);
     for (Node2D node : visible)
       this.put(node.getPosition(), node.getShape());
   }

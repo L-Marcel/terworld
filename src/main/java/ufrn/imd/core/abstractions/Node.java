@@ -8,9 +8,14 @@ import ufrn.imd.core.enums.Action;
 import ufrn.imd.core.physics.Physics;
 
 public abstract class Node {
-  private boolean freeIsPending = false;
-  private final List<Node> children = new ArrayList<>(0);
+  private boolean freeIsPending;
+  private final List<Node> children;
   private Node parent;
+
+  protected Node() {
+    this.freeIsPending = false;
+    this.children = new ArrayList<>(0);
+  }
 
   public final void queueFree() {
     this.freeIsPending = true;

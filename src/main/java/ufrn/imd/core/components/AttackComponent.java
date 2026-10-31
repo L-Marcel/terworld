@@ -1,5 +1,7 @@
 package ufrn.imd.core.components;
 
+import ufrn.imd.core.constants.Attacks;
+
 public class AttackComponent {
   private boolean requested = false;
   private boolean attacking = false;
@@ -14,7 +16,7 @@ public class AttackComponent {
     this.requested = false;
 
     if (this.attacking)
-      this.recoveryTicks = 1;
+      this.recoveryTicks = Attacks.RECOVERY_TICKS;
     else if (this.recoveryTicks > 0)
       this.recoveryTicks--;
   }

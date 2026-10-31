@@ -13,13 +13,15 @@ import ufrn.imd.core.resolvers.CombatResolver;
 
 public class Sword extends Node2D {
   private final Body2D owner;
-  private final AttackComponent attack = new AttackComponent();
-  private final CombatResolver combat = new CombatResolver();
+  private final AttackComponent attack;
+  private final CombatResolver combat;
   private Direction facing = Direction.RIGHT;
   private final SwordTip tip;
 
   public Sword(Body2D owner) {
     super(owner.getPosition().sum(1, 0));
+    this.attack = new AttackComponent();
+    this.combat = new CombatResolver();
     this.owner = owner;
     this.tip = new SwordTip(this.position.sum(1, 0));
   }

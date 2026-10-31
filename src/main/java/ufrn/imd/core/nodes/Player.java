@@ -2,20 +2,22 @@ package ufrn.imd.core.nodes;
 
 import ufrn.imd.core.abstractions.Body2D;
 import ufrn.imd.core.components.HealthComponent;
+import ufrn.imd.core.constants.Health;
 import ufrn.imd.core.enums.Action;
 import ufrn.imd.core.enums.Direction;
 import ufrn.imd.core.physics.Physics;
 import ufrn.imd.core.physics.Vector2;
 
 public class Player extends Body2D {
-  public static final int MAX_HP = 4;
-  private final HealthComponent health = new HealthComponent(MAX_HP);
   private boolean levelCompleted = false;
   private Direction facing = Direction.RIGHT;
+
+  private final HealthComponent health;
   private final Sword sword;
 
   public Player(Vector2 position) {
     super(position, 2);
+    this.health = new HealthComponent(Health.PLAYER_MAX_HP);
     this.sword = new Sword(this);
     this.addChild(this.sword);
   }

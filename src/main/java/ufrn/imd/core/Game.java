@@ -6,10 +6,10 @@ import ufrn.imd.core.enums.Action;
 import ufrn.imd.core.rendering.Window;
 
 public class Game {
+  private boolean won = false;
   private Queue<Level> levels;
   private Level initialLevel;
   private World world;
-  private boolean won = false;
 
   public Game() {
     this.initialLevel = Level.empty();
