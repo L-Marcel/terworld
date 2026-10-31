@@ -10,6 +10,7 @@
     <maven.compiler.source>25</maven.compiler.source>
     <maven.compiler.target>25</maven.compiler.target>
     <spotless.version>3.10.4</spotless.version>
+    <exec.version>3.6.4</exec.version>
     <jline.version>4.4.3</jline.version>
     <eclipse.formatter.version>4.35</eclipse.formatter.version>
     <lifecycle.version>1.0.0</lifecycle.version>
@@ -22,6 +23,7 @@
     </dependency>
   </dependencies>
   <build>
+    <defaultGoal>compile exec:exec</defaultGoal>
     <pluginManagement>
       <plugins>
         <plugin>
@@ -51,6 +53,20 @@
       </plugins>
     </pluginManagement>
     <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>${exec.version}</version>
+        <configuration>
+          <executable>${java.home}/bin/java</executable>
+          <inheritIo>true</inheritIo>
+          <arguments>
+            <argument>-cp</argument>
+            <classpath />
+            <argument>ufrn.imd.Main</argument>
+          </arguments>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
