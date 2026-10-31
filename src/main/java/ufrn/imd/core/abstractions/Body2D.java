@@ -1,9 +1,9 @@
 package ufrn.imd.core.abstractions;
 
-import ufrn.imd.core.Action;
-import ufrn.imd.core.Physics;
-import ufrn.imd.core.Vector2;
 import ufrn.imd.core.constants.Forces;
+import ufrn.imd.core.enums.Action;
+import ufrn.imd.core.physics.Physics;
+import ufrn.imd.core.physics.Vector2;
 
 public abstract class Body2D extends Node2D {
   private Vector2 velocity;
@@ -25,8 +25,10 @@ public abstract class Body2D extends Node2D {
   @Override
   public void process(Action action, Physics physics) {
     this.move(physics);
+
     if (this.isFreePending())
       return;
+
     if (!physics.isGrounded(this))
       this.velocity = this.velocity.sum(0, Forces.GRAVITY);
     else

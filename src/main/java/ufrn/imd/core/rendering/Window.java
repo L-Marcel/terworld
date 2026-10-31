@@ -1,4 +1,4 @@
-package ufrn.imd.core;
+package ufrn.imd.core.rendering;
 
 import java.util.List;
 

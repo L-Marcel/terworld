@@ -1,6 +1,6 @@
 package ufrn.imd.inputs;
 
-import ufrn.imd.core.Action;
+import ufrn.imd.core.enums.Action;
 
 public record Key(int code) {
 

@@ -13,13 +13,13 @@ import java.util.List;
 import java.util.Queue;
 import java.util.stream.Stream;
 import ufrn.imd.core.Level;
-import ufrn.imd.core.Vector2;
 import ufrn.imd.core.abstractions.Node;
 import ufrn.imd.core.nodes.Block;
 import ufrn.imd.core.nodes.EndOfLevel;
 import ufrn.imd.core.nodes.Enemy;
 import ufrn.imd.core.nodes.Player;
 import ufrn.imd.core.nodes.Spike;
+import ufrn.imd.core.physics.Vector2;
 
 public class Loader {
   public Queue<Level> load() throws IOException, URISyntaxException {

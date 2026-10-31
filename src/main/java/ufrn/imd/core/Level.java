@@ -8,6 +8,7 @@ import ufrn.imd.core.nodes.EndOfLevel;
 import ufrn.imd.core.nodes.Enemy;
 import ufrn.imd.core.nodes.Player;
 import ufrn.imd.core.nodes.Spike;
+import ufrn.imd.core.physics.Vector2;
 
 public record Level(
   int width,
@@ -26,16 +27,22 @@ public record Level(
 
     for (Node node : this.nodes) {
       nodes.add(switch (node) {
-        case Player ignored -> player;
+        case Player _ -> player;
         case Enemy enemy -> new Enemy(enemy.getPosition());
         case Spike spike -> new Spike(spike.getPosition());
         case EndOfLevel end -> new EndOfLevel(end.getPosition());
         case Block block -> new Block(block.getPosition());
-        default -> throw new IllegalArgumentException("Unsupported level node: " + node.getClass().getName());
+        default -> node;
       });
     }
 
-    return new Level(this.width, this.height, content, player, nodes);
+    return new Level(
+      this.width,
+      this.height,
+      content,
+      player,
+      nodes
+    );
   }
 
   public static Level empty() {

@@ -1,6 +1,6 @@
 package ufrn.imd.core.abstractions;
 
-import ufrn.imd.core.Vector2;
+import ufrn.imd.core.physics.Vector2;
 
 public abstract class Node2D extends Node {
   protected int layer;
@@ -22,8 +22,6 @@ public abstract class Node2D extends Node {
   public Vector2 getPosition() {
     return this.position;
   }
-
-  public void onContact(Body2D body) {}
 
   public abstract char getShape();
 }

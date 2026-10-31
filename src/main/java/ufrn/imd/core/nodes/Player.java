@@ -1,30 +1,35 @@
 package ufrn.imd.core.nodes;
 
-import ufrn.imd.core.Action;
-import ufrn.imd.core.Physics;
-import ufrn.imd.core.Vector2;
 import ufrn.imd.core.abstractions.Body2D;
+import ufrn.imd.core.components.HealthComponent;
+import ufrn.imd.core.enums.Action;
+import ufrn.imd.core.enums.Direction;
+import ufrn.imd.core.physics.Physics;
+import ufrn.imd.core.physics.Vector2;
 
 public class Player extends Body2D {
   public static final int MAX_HP = 4;
-  private int hp = MAX_HP;
-  private int damageProtectionTicks = 0;
+  private final HealthComponent health = new HealthComponent(MAX_HP);
   private boolean levelCompleted = false;
-  private boolean flipped = false;
-  private Sword sword;
+  private Direction facing = Direction.RIGHT;
+  private final Sword sword;
 
   public Player(Vector2 position) {
     super(position, 2);
-    this.sword = new Sword(position.sum(1, 0));
+    this.sword = new Sword(this);
     this.addChild(this.sword);
   }
 
   public int getHp() {
-    return this.hp;
+    return this.health.getHp();
+  }
+
+  public int getMaxHp() {
+    return this.health.getMaxHp();
   }
 
   public boolean isDead() {
-    return this.hp == 0;
+    return this.health.isDead();
   }
 
   public boolean hasCompletedLevel() {
@@ -37,27 +42,22 @@ public class Player extends Body2D {
   }
 
   public boolean isProtected() {
-    return this.damageProtectionTicks > 0;
+    return this.health.isProtected();
   }
 
-  public void tickDamageProtection() {
-    if (this.damageProtectionTicks > 0)
-      this.damageProtectionTicks--;
+  public void beginTick() {
+    this.health.beginTick();
   }
 
   public void takeDamage() {
-    if (this.isDead() ||
-      this.hasCompletedLevel() ||
-      this.isProtected() ||
-      this.isFreePending())
+    if (this.hasCompletedLevel() || this.isFreePending())
       return;
 
-    this.hp--;
+    if (!this.health.takeDamage())
+      return;
 
     if (this.isDead())
       this.queueFree();
-    else
-      this.damageProtectionTicks = 3;
   }
 
   @Override
@@ -74,11 +74,11 @@ public class Player extends Body2D {
         break;
       case LEFT:
         this.setVelocity(velocity.withX(-1));
-        this.flipped = true;
+        this.facing = Direction.LEFT;
         break;
       case RIGHT:
         this.setVelocity(velocity.withX(1));
-        this.flipped = false;
+        this.facing = Direction.RIGHT;
         break;
       default:
         this.setVelocity(velocity.withX(0));
@@ -86,10 +86,7 @@ public class Player extends Body2D {
     }
 
     super.process(action, physics);
-    this.sword.setFlipped(this.flipped);
-    this.sword.setPosition(
-      this.position.sum(this.flipped ? -1 : 1, 0)
-    );
+    this.sword.follow(this.facing);
 
     if (action == Action.ATTACK)
       this.sword.attack();

@@ -1,58 +1,61 @@
 package ufrn.imd.core.nodes;
 
-import ufrn.imd.core.Action;
-import ufrn.imd.core.Physics;
-import ufrn.imd.core.Vector2;
 import ufrn.imd.core.abstractions.Body2D;
+import ufrn.imd.core.enums.Action;
+import ufrn.imd.core.enums.Direction;
+import ufrn.imd.core.physics.CollisionMap;
+import ufrn.imd.core.physics.Physics;
+import ufrn.imd.core.physics.Vector2;
 
 public class Enemy extends Body2D {
-  private boolean flipped = false;
-  private Sword sword;
+  private Direction facing = Direction.RIGHT;
+  private final Sword sword;
 
   public Enemy(Vector2 position) {
     super(position, 1);
-    this.sword = new Sword(position.sum(1, 0));
+    this.sword = new Sword(this);
     this.addChild(this.sword);
   }
 
   @Override
   public void process(Action action, Physics physics) {
-    Vector2 velocity = this.getVelocity().withX(0);
-    boolean attacking = this.attackIfPlayerInRange(physics);
-
-    if (!attacking && physics.isGrounded(this)) {
-      int direction = this.flipped ? -1 : 1;
-      Vector2 next = this.position.sum(direction, 0);
-
-      if (physics.isBlocked(next, this)
-        || physics.isDangerous(next)
-        || !physics.isSolid(next.sum(0, 1)))
-        this.flipped = !this.flipped;
-      else
-        velocity = velocity.withX(direction);
-    }
-
-    this.setVelocity(velocity);
+    CollisionMap collisions = physics.getCollisionMap();
+    boolean attacking = this.attackIfPlayerInRange(collisions);
+    this.patrol(physics, attacking);
     super.process(action, physics);
 
     if (!attacking)
-      this.attackIfPlayerInRange(physics);
-    this.sword.setFlipped(this.flipped);
-    this.sword.setPosition(
-      this.position.sum(this.flipped ? -1 : 1, 0)
-    );
+      this.attackIfPlayerInRange(collisions);
+    this.sword.follow(this.facing);
   }
 
-  private boolean attackIfPlayerInRange(Physics physics) {
-    for (int direction = -1; direction <= 1; direction += 2) {
-      for (int distance = 1; distance <= 2; distance++) {
-        Vector2 position = this.position.sum(direction * distance, 0);
+  private void patrol(Physics physics, boolean attacking) {
+    Vector2 velocity = this.getVelocity().withX(0);
+    if (!attacking && physics.isGrounded(this)) {
+      CollisionMap collisions = physics.getCollisionMap();
+      Vector2 next = this.position.sum(this.facing.step(), 0);
 
-        if (physics.isSolid(position))
+      if (collisions.isBlocked(next, this)
+        || collisions.isDangerous(next)
+        || !collisions.isSolid(next.sum(0, 1)))
+        this.facing = this.facing.opposite();
+      else
+        velocity = velocity.withX(this.facing.step());
+    }
+
+    this.setVelocity(velocity);
+  }
+
+  private boolean attackIfPlayerInRange(CollisionMap collisions) {
+    for (Direction direction : Direction.values()) {
+      for (int distance = 1; distance <= 2; distance++) {
+        Vector2 position = this.position.sum(direction.step() * distance, 0);
+
+        if (collisions.isSolid(position))
           break;
 
-        if (physics.getBodyAt(position, this).filter(Player.class::isInstance).isPresent()) {
-          this.flipped = direction < 0;
+        if (collisions.getBodyAt(position, this).orElse(null) instanceof Player) {
+          this.facing = direction;
           this.sword.attack();
           return true;
         }
@@ -60,11 +63,6 @@ public class Enemy extends Body2D {
     }
 
     return false;
-  }
-
-  @Override
-  public Vector2 getPosition() {
-    return this.position;
   }
 
   @Override

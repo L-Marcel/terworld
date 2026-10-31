@@ -1,4 +1,4 @@
-package ufrn.imd.core;
+package ufrn.imd.core.physics;
 
 public record Vector2(
   int x,
