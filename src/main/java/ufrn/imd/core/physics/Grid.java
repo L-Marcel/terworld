@@ -20,12 +20,14 @@ public class Grid {
 
   private static int widthOf(char[][] cells) {
     int width = 0;
+
     if (cells != null) {
       for (char[] row : cells) {
         if (row != null)
           width = Math.max(width, row.length);
       }
     }
+
     return width;
   }
 
@@ -56,12 +58,14 @@ public class Grid {
   public char get(Vector2 position) {
     if (!this.contains(position))
       return ' ';
+
     return this.cells[position.y()][position.x()];
   }
 
   public boolean put(Vector2 position, char value) {
     if (!this.contains(position))
       return false;
+
     this.cells[position.y()][position.x()] = value;
     return true;
   }

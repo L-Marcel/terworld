@@ -1,30 +1,42 @@
 package ufrn.imd.core;
 
-import ufrn.imd.core.enums.Action;
+import ufrn.imd.core.abstractions.Fighter;
+import ufrn.imd.core.abstractions.Node;
 import ufrn.imd.core.nodes.Player;
 import ufrn.imd.core.physics.CollisionMap;
 import ufrn.imd.core.physics.Physics;
 import ufrn.imd.core.rendering.Render;
 import ufrn.imd.core.rendering.Window;
+import ufrn.imd.core.resolvers.CombatResolver;
 
 public class World {
   private final Player player;
   private final Scene scene;
   private final Physics physics;
   private final Render render;
+  private final CombatResolver combat;
 
   public World(Level initialLevel) {
     Level level = initialLevel.copy();
     this.player = level.player();
     this.scene = new Scene(level.nodes());
-    this.physics = new Physics(new CollisionMap(level, this.scene));
+
+    CollisionMap collisions = new CollisionMap(level, this.scene);
+    this.physics = new Physics(collisions);
+    this.combat = new CombatResolver(collisions);
+
     this.render = new Render(level, this.scene);
   }
 
-  public void process(Action action) {
-    this.player.beginTick();
-    this.scene.processRoots(action, this.physics);
-    this.scene.processChildren(action, this.physics);
+  public void process(Controls controls) {
+    for (Node node : this.scene.getNodes()) {
+      if (node instanceof Fighter fighter)
+        fighter.beginTick();
+    }
+
+    this.scene.processRoots(controls, this.physics);
+    this.scene.processChildren(controls, this.physics);
+    this.combat.resolve(this.scene);
     this.scene.removeQueued();
   }
 

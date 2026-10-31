@@ -2,7 +2,8 @@ package ufrn.imd.core;
 
 import java.util.LinkedList;
 import java.util.Queue;
-import ufrn.imd.core.enums.Action;
+import ufrn.imd.core.constants.Levels;
+import ufrn.imd.core.constants.Ticks;
 import ufrn.imd.core.rendering.Window;
 
 public class Game {
@@ -10,6 +11,7 @@ public class Game {
   private Queue<Level> levels;
   private Level initialLevel;
   private World world;
+  private double transitionSeconds;
 
   public Game() {
     this.initialLevel = Level.empty();
@@ -25,18 +27,24 @@ public class Game {
 
     this.initialLevel = this.levels.poll();
     this.world = new World(this.initialLevel);
+    this.transitionSeconds = 0;
   }
 
-  public void process(Action action) {
+  public void process(Controls controls) {
     if (this.won)
       return;
 
-    if (this.world.isDead()) {
-      this.restartLevel();
-    } else if (this.world.isCompleted()) {
-      this.nextLevel();
+    if (this.world.isDead() || this.world.isCompleted()) {
+      this.transitionSeconds += Ticks.STEP_SECONDS;
+      double delay = this.world.isDead() ? Levels.DEFEAT_DELAY_SECONDS : Levels.COMPLETION_DELAY_SECONDS;
+      if (this.transitionSeconds + Ticks.TIME_EPSILON >= delay) {
+        if (this.world.isDead())
+          this.restartLevel();
+        else
+          this.nextLevel();
+      }
     } else {
-      this.world.process(action);
+      this.world.process(controls);
     }
 
     this.world.redraw();
@@ -44,6 +52,7 @@ public class Game {
 
   private void restartLevel() {
     this.world = new World(this.initialLevel);
+    this.transitionSeconds = 0;
   }
 
   public Window getWindow(int columns, int rows) {

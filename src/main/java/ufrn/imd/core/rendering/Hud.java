@@ -5,7 +5,14 @@ import ufrn.imd.core.nodes.Player;
 public class Hud {
   public String render(Player player, boolean won, int columns) {
     String status = this.getStatus(player, won);
-    return status.substring(0, Math.max(0, Math.min(columns, status.length())));
+    return status.substring(
+      0, Math.max(
+        0, Math.min(
+          columns,
+          status.length()
+        )
+      )
+    );
   }
 
   private String getStatus(Player player, boolean won) {

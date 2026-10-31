@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import ufrn.imd.core.abstractions.Node;
-import ufrn.imd.core.enums.Action;
 import ufrn.imd.core.physics.Physics;
 
 public class Scene {
@@ -14,29 +13,29 @@ public class Scene {
     this.roots = new ArrayList<>(roots);
   }
 
-  public void processRoots(Action action, Physics physics) {
+  public void processRoots(Controls controls, Physics physics) {
     for (Node node : this.roots) {
       if (!node.isFreePending())
-        node.process(action, physics);
+        node.process(controls, physics);
     }
   }
 
-  public void processChildren(Action action, Physics physics) {
+  public void processChildren(Controls controls, Physics physics) {
     for (Node node : this.roots) {
       if (!node.isFreePending()) {
         for (Node child : node.getChildren())
-          this.process(child, action, physics);
+          this.process(child, controls, physics);
       }
     }
   }
 
-  private void process(Node node, Action action, Physics physics) {
+  private void process(Node node, Controls controls, Physics physics) {
     if (node.isFreePending())
       return;
 
-    node.process(action, physics);
+    node.process(controls, physics);
     for (Node child : node.getChildren())
-      this.process(child, action, physics);
+      this.process(child, controls, physics);
   }
 
   public void removeQueued() {

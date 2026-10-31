@@ -1,8 +1,9 @@
 package ufrn.imd.inputs;
 
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.function.Consumer;
 import org.jline.terminal.Attributes;
 import org.jline.terminal.Terminal;
 import org.jline.utils.NonBlockingReader;
@@ -10,54 +11,62 @@ import org.jline.utils.NonBlockingReader;
 public class KeyListener implements AutoCloseable {
   private final ExecutorService executor;
   private final Terminal terminal;
-  private Key pressed;
+  private final Attributes originalAttributes;
+  private final Queue<Key> keys;
+  private final KeyDecoder decoder;
+  private volatile boolean running;
 
   public KeyListener(Terminal terminal) {
-    this.pressed = Key.none();
     this.terminal = terminal;
+    this.originalAttributes = terminal.enterRawMode();
     this.executor = Executors.newVirtualThreadPerTaskExecutor();
+    this.keys = new ConcurrentLinkedQueue<>();
+    this.decoder = new KeyDecoder();
   }
 
-  public void listen(Consumer<Key> callback) {
-    this.executor.submit(() -> this.run(callback));
+  public void listen() {
+    this.running = true;
+    this.executor.submit(this::run);
   }
 
-  private void run(Consumer<Key> callback) {
-    Attributes config = this.terminal.enterRawMode();
-
+  private void run() {
     try {
-      while (!Thread.currentThread().isInterrupted()) {
+      while (this.running && !Thread.currentThread().isInterrupted()) {
         int code = this.terminal.reader().read(100);
 
         if (code == NonBlockingReader.EOF) {
-          callback.accept(Key.of(3));
+          this.keys.add(Key.of(3));
           break;
-        } else if (code == NonBlockingReader.READ_EXPIRED)
+        }
+
+        if (code == NonBlockingReader.READ_EXPIRED) {
+          this.decoder.reset();
           continue;
+        }
 
-        Key key = Key.of(code);
-
+        Key key = this.decoder.accept(code);
         if (key.isValid())
-          callback.accept(key);
+          this.keys.add(key);
       }
     } catch (Exception e) {
+      this.keys.add(Key.of(3));
       Thread.currentThread().interrupt();
-    } finally {
-      terminal.setAttributes(config);
     }
   }
 
-  public Key getPressedKey() {
-    return this.pressed;
-  }
-
-  public void setPressedKey(Key key) {
-    this.pressed = key;
+  public Key poll() {
+    Key key = this.keys.poll();
+    return key == null ? Key.none() : key;
   }
 
   @Override
   public void close() {
+    this.running = false;
     this.executor.shutdownNow();
-    this.executor.close();
+    try {
+      this.executor.close();
+    } finally {
+      this.terminal.setAttributes(this.originalAttributes);
+    }
   }
 }

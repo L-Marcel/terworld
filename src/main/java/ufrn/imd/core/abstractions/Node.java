@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import ufrn.imd.core.enums.Action;
+import ufrn.imd.core.Controls;
 import ufrn.imd.core.physics.Physics;
 
 public abstract class Node {
@@ -47,5 +47,5 @@ public abstract class Node {
     return Collections.unmodifiableList(this.children);
   }
 
-  public void process(Action action, Physics physics) {}
+  public void process(Controls controls, Physics physics) {}
 }

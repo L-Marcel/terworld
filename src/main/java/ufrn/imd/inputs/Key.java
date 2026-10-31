@@ -1,8 +1,12 @@
 package ufrn.imd.inputs;
 
-import ufrn.imd.core.enums.Action;
-
-public record Key(int code) {
+public record Key(
+  int code,
+  KeyEvent event
+) {
+  public Key(int code) {
+    this(code, KeyEvent.TEXT);
+  }
 
   public static Key none() {
     return new Key(-1);
@@ -28,17 +32,6 @@ public record Key(int code) {
 
   public boolean isValid() {
     return Keys.VALIDS.contains(this.code);
-  }
-
-  public Action toAction() {
-    return switch (this.code) {
-      case 'a' -> Action.LEFT;
-      case 'd' -> Action.RIGHT;
-      case 'k' -> Action.JUMP;
-      case 's' -> Action.DROP;
-      case 'j' -> Action.ATTACK;
-      default -> Action.NONE;
-    };
   }
 
   @Override

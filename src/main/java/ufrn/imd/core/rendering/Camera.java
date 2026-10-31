@@ -7,7 +7,12 @@ import ufrn.imd.core.physics.Grid;
 import ufrn.imd.core.physics.Vector2;
 
 public class Camera {
-  public List<String> capture(Grid map, Vector2 target, int columns, int rows) {
+  public List<String> capture(
+    Grid map,
+    Vector2 target,
+    int columns,
+    int rows
+  ) {
     if (columns <= 0 || rows <= 0)
       return List.of();
 
@@ -17,7 +22,6 @@ public class Camera {
     int height = Math.min(rows, mapHeight);
     int offsetX = width / Rendering.WINDOW_HORIZONTAL_DIVISOR;
     int offsetY = Math.max(0, height - 1 - Rendering.WINDOW_BOTTOM_OFFSET);
-
     int left = Math.max(0, Math.min(target.x() - offsetX, mapWidth - width));
     int top = Math.max(0, Math.min(target.y() - offsetY, mapHeight - height));
 

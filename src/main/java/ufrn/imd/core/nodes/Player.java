@@ -1,17 +1,27 @@
 package ufrn.imd.core.nodes;
 
+import ufrn.imd.core.Controls;
 import ufrn.imd.core.abstractions.Fighter;
+import ufrn.imd.core.components.AttackComponent;
+import ufrn.imd.core.components.JumpComponent;
+import ufrn.imd.core.constants.Attacks;
+import ufrn.imd.core.constants.Forces;
 import ufrn.imd.core.constants.Health;
-import ufrn.imd.core.enums.Action;
 import ufrn.imd.core.enums.Direction;
 import ufrn.imd.core.physics.Physics;
 import ufrn.imd.core.physics.Vector2;
 
 public class Player extends Fighter {
   private boolean levelCompleted = false;
+  private final JumpComponent jump;
 
   public Player(Vector2 position) {
-    super(position, 2, Health.PLAYER_MAX_HP);
+    super(
+      position, 2, Health.PLAYER_MAX_HP, new AttackComponent(
+        Attacks.PLAYER_PREPARATION_SECONDS, Attacks.PLAYER_ACTIVE_SECONDS, Attacks.PLAYER_RECOVERY_SECONDS
+      )
+    );
+    this.jump = new JumpComponent();
   }
 
   public boolean hasCompletedLevel() {
@@ -30,33 +40,20 @@ public class Player extends Fighter {
   }
 
   @Override
-  public void process(Action action, Physics physics) {
-    Vector2 velocity = this.getVelocity();
+  public void process(Controls controls, Physics physics) {
+    this.setHorizontalSpeed(controls.horizontal() * Forces.PLAYER_SPEED);
+    if (controls.horizontal() != 0)
+      this.face(controls.horizontal() < 0 ? Direction.LEFT : Direction.RIGHT);
 
-    switch (action) {
-      case JUMP:
-        this.setVelocity(velocity.withX(0));
-        this.jump(physics);
-        break;
-      case DROP:
-        this.setVelocity(velocity.withY(1));
-        break;
-      case LEFT:
-        this.setVelocity(velocity.withX(-1));
-        this.face(Direction.LEFT);
-        break;
-      case RIGHT:
-        this.setVelocity(velocity.withX(1));
-        this.face(Direction.RIGHT);
-        break;
-      default:
-        this.setVelocity(velocity.withX(0));
-        break;
-    }
-
-    super.process(action, physics);
-    if (action == Action.ATTACK)
+    boolean grounded = physics.isGrounded(this) && this.getVerticalSpeed() >= 0;
+    if (this.jump.process(controls.jump(), grounded))
+      this.jump();
+    if (controls.drop())
+      this.drop();
+    if (controls.attack())
       this.attack();
+
+    super.process(controls, physics);
   }
 
   @Override

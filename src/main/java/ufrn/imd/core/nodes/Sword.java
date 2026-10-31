@@ -1,47 +1,52 @@
 package ufrn.imd.core.nodes;
 
+import java.util.HashSet;
 import java.util.List;
-import ufrn.imd.core.abstractions.Body2D;
+import java.util.Set;
+import ufrn.imd.core.Controls;
 import ufrn.imd.core.abstractions.Fighter;
 import ufrn.imd.core.abstractions.Node2D;
-import ufrn.imd.core.components.AttackComponent;
-import ufrn.imd.core.enums.Action;
 import ufrn.imd.core.enums.Direction;
 import ufrn.imd.core.physics.CollisionMap;
 import ufrn.imd.core.physics.Physics;
 import ufrn.imd.core.physics.Vector2;
-import ufrn.imd.core.resolvers.CombatResolver;
 
 public class Sword extends Node2D {
   private final Fighter owner;
-  private final AttackComponent attack;
-  private final CombatResolver combat;
   private final SwordTip tip;
+  private final Set<Fighter> hitTargets;
+  private List<Vector2> cells;
+  private boolean wasAttacking;
 
   public Sword(Fighter owner) {
     super(owner.getPosition().sum(owner.getFacing().step(), 0));
-    this.attack = new AttackComponent();
-    this.combat = new CombatResolver();
     this.owner = owner;
     this.tip = new SwordTip(this);
+    this.hitTargets = new HashSet<>();
+    this.cells = List.of();
   }
 
-  public void attack() {
-    this.attack.request();
+  public Fighter getOwner() {
+    return this.owner;
+  }
+
+  public List<Vector2> getCells() {
+    return this.cells;
+  }
+
+  public boolean markHit(Fighter target) {
+    return this.hitTargets.add(target);
   }
 
   @Override
-  public void process(Action action, Physics physics) {
+  public void process(Controls controls, Physics physics) {
     this.position = this.owner.getPosition().sum(this.getFacing().step(), 0);
-    this.attack.process();
-    CollisionMap collisions = physics.getCollisionMap();
-    List<Vector2> cells = this.attack.isAttacking() ? this.reachableCells(collisions) : List.of();
-    this.updateTip(cells);
-
-    for (Vector2 position : cells) {
-      Body2D target = collisions.getBodyAt(position, this.owner).orElse(null);
-      this.combat.resolve(this.owner, target);
-    }
+    boolean attacking = this.owner.isAttacking();
+    if (attacking && !this.wasAttacking)
+      this.hitTargets.clear();
+    this.wasAttacking = attacking;
+    this.cells = attacking ? this.reachableCells(physics.getCollisionMap()) : List.of();
+    this.updateTip(this.cells);
   }
 
   private List<Vector2> reachableCells(CollisionMap collisions) {
@@ -68,7 +73,7 @@ public class Sword extends Node2D {
 
   @Override
   public char getShape() {
-    if (this.attack.isAttacking())
+    if (this.owner.isAttacking())
       return '-';
     return this.getFacing() == Direction.LEFT ? '\\' : '/';
   }

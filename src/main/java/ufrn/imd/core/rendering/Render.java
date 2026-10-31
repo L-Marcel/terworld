@@ -47,8 +47,24 @@ public class Render {
       return new Window(0, 0, List.of());
 
     List<String> lines = new ArrayList<>(rows);
-    lines.add(this.hud.render(this.level.player(), won, columns));
-    lines.addAll(this.camera.capture(this.map, this.level.player().getPosition(), columns, rows - 1));
+
+    lines.add(
+      this.hud.render(
+        this.level.player(),
+        won,
+        columns
+      )
+    );
+
+    lines.addAll(
+      this.camera.capture(
+        this.map,
+        this.level.player().getPosition(),
+        columns,
+        rows - 1
+      )
+    );
+
     return new Window(columns, rows, lines);
   }
 }

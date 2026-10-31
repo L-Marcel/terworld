@@ -1,8 +1,11 @@
 package ufrn.imd.core.nodes;
 
+import ufrn.imd.core.Controls;
 import ufrn.imd.core.abstractions.Fighter;
+import ufrn.imd.core.components.AttackComponent;
+import ufrn.imd.core.constants.Attacks;
+import ufrn.imd.core.constants.Forces;
 import ufrn.imd.core.constants.Health;
-import ufrn.imd.core.enums.Action;
 import ufrn.imd.core.enums.Direction;
 import ufrn.imd.core.physics.CollisionMap;
 import ufrn.imd.core.physics.Physics;
@@ -10,22 +13,32 @@ import ufrn.imd.core.physics.Vector2;
 
 public class Enemy extends Fighter {
   public Enemy(Vector2 position) {
-    super(position, 1, Health.ENEMY_MAX_HP);
+    super(
+      position, 1, Health.ENEMY_MAX_HP, new AttackComponent(
+        Attacks.ENEMY_PREPARATION_SECONDS, Attacks.ENEMY_ACTIVE_SECONDS, Attacks.ENEMY_RECOVERY_SECONDS
+      )
+    );
   }
 
   @Override
-  public void process(Action action, Physics physics) {
+  public void process(Controls controls, Physics physics) {
+    if (!this.canAttack()) {
+      this.setHorizontalSpeed(0);
+      super.process(controls, physics);
+      return;
+    }
+
     CollisionMap collisions = physics.getCollisionMap();
     boolean attacking = this.attackIfPlayerInRange(collisions);
     this.patrol(physics, attacking);
-    super.process(action, physics);
+    super.process(controls, physics);
 
     if (!attacking)
       this.attackIfPlayerInRange(collisions);
   }
 
   private void patrol(Physics physics, boolean attacking) {
-    Vector2 velocity = this.getVelocity().withX(0);
+    double speed = 0;
     if (!attacking && physics.isGrounded(this)) {
       CollisionMap collisions = physics.getCollisionMap();
       Vector2 next = this.position.sum(this.getFacing().step(), 0);
@@ -35,10 +48,10 @@ public class Enemy extends Fighter {
         || !collisions.isSolid(next.sum(0, 1)))
         this.face(this.getFacing().opposite());
       else
-        velocity = velocity.withX(this.getFacing().step());
+        speed = this.getFacing().step() * Forces.ENEMY_SPEED;
     }
 
-    this.setVelocity(velocity);
+    this.setHorizontalSpeed(speed);
   }
 
   private boolean attackIfPlayerInRange(CollisionMap collisions) {
@@ -62,6 +75,6 @@ public class Enemy extends Fighter {
 
   @Override
   public char getShape() {
-    return 'E';
+    return this.isPreparing() ? 'e' : 'E';
   }
 }

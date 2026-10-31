@@ -20,11 +20,13 @@ public class CollisionMap {
   }
 
   public boolean isSolid(Vector2 position) {
-    return !this.content.contains(position) || this.content.get(position) == '#';
+    return !this.content.contains(position) ||
+      this.content.get(position) == '#';
   }
 
   public boolean isBlocked(Vector2 position, Body2D ignored) {
-    return this.isSolid(position) || this.getBodyAt(position, ignored).isPresent();
+    return this.isSolid(position) ||
+      this.getBodyAt(position, ignored).isPresent();
   }
 
   public boolean isDangerous(Vector2 position) {

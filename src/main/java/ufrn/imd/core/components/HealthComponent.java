@@ -1,9 +1,10 @@
 package ufrn.imd.core.components;
 
 import ufrn.imd.core.constants.Health;
+import ufrn.imd.core.constants.Ticks;
 
 public class HealthComponent {
-  private int protectionTicks = 0;
+  private double protectionSeconds = 0;
   private final int maxHp;
   private int hp;
 
@@ -14,8 +15,10 @@ public class HealthComponent {
   }
 
   public void beginTick() {
-    if (this.protectionTicks > 0)
-      this.protectionTicks--;
+    this.protectionSeconds = Math.max(
+      0,
+      this.protectionSeconds - Ticks.STEP_SECONDS
+    );
   }
 
   public boolean takeDamage() {
@@ -24,7 +27,7 @@ public class HealthComponent {
 
     this.hp--;
     if (!this.isDead())
-      this.protectionTicks = Health.DAMAGE_PROTECTION_TICKS;
+      this.protectionSeconds = Health.DAMAGE_PROTECTION_SECONDS;
     return true;
   }
 
@@ -41,6 +44,6 @@ public class HealthComponent {
   }
 
   public boolean isProtected() {
-    return this.protectionTicks > 0;
+    return this.protectionSeconds > Ticks.TIME_EPSILON;
   }
 }
