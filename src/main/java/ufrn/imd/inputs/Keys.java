@@ -7,7 +7,7 @@ public class Keys {
   public static final int MAX_SEQUENCE_LENGTH = 64;
   public static final String ENTER_EVENT_MODE = "\u001b[>11u";
   public static final String EXIT_EVENT_MODE = "\u001b[<u";
-  public static final String HELP = "a/d: andar | k: pular | j: estocar | s: descer | ?: objetivo | Ctrl+C: sair";
+  public static final String HELP = "a/d: andar | k: pular | j: atacar | s: descer | ?: objetivo | Ctrl+C: sair";
   public static final Set<Integer> VALIDS = Set.of(
     3, // Control + C
     (int) 'w',
