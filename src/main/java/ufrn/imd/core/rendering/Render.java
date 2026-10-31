@@ -7,14 +7,14 @@ import ufrn.imd.core.Scene;
 import ufrn.imd.core.abstractions.Node;
 import ufrn.imd.core.abstractions.Node2D;
 import ufrn.imd.core.constants.Comparators;
-import ufrn.imd.core.physics.Vector2;
+import ufrn.imd.core.physics.Grid;
 
 public class Render {
   private final Level level;
   private final Scene scene;
   private final Camera camera;
   private final Hud hud;
-  private char[][] map;
+  private Grid map;
 
   public Render(Level level, Scene scene) {
     this.level = level;
@@ -35,21 +35,11 @@ public class Render {
 
     visible.sort(Comparators.BY_LAYER);
     for (Node2D node : visible)
-      this.put(node.getPosition(), node.getShape());
+      this.map.put(node.getPosition(), node.getShape());
   }
 
   private void reset() {
-    char[][] content = this.level.content();
-    this.map = new char[content.length][];
-    for (int row = 0; row < content.length; row++)
-      this.map[row] = content[row].clone();
-  }
-
-  private void put(Vector2 position, char shape) {
-    boolean validX = position.x() >= 0 && position.x() < this.level.width();
-    boolean validY = position.y() >= 0 && position.y() < this.level.height();
-    if (validX && validY)
-      this.map[position.y()][position.x()] = shape;
+    this.map = this.level.content().copy();
   }
 
   public Window getWindow(int columns, int rows, boolean won) {

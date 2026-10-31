@@ -5,22 +5,19 @@ import ufrn.imd.core.enums.Direction;
 import ufrn.imd.core.physics.Vector2;
 
 public class SwordTip extends Node2D {
-  private Direction facing = Direction.RIGHT;
+  private final Sword sword;
 
-  public SwordTip(Vector2 position) {
-    super(position);
+  public SwordTip(Sword sword) {
+    super(sword.getPosition().sum(sword.getFacing().step(), 0));
+    this.sword = sword;
   }
 
   public void setPosition(Vector2 position) {
     this.position = position;
   }
 
-  public void setDirection(Direction facing) {
-    this.facing = facing;
-  }
-
   @Override
   public char getShape() {
-    return this.facing == Direction.LEFT ? '<' : '>';
+    return this.sword.getFacing() == Direction.LEFT ? '<' : '>';
   }
 }

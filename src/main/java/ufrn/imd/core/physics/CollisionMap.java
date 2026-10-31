@@ -11,24 +11,16 @@ import ufrn.imd.core.abstractions.Node2D;
 import ufrn.imd.core.nodes.Spike;
 
 public class CollisionMap {
-  private final int width;
-  private final int height;
-  private final char[][] content;
+  private final Grid content;
   private final Scene scene;
 
   public CollisionMap(Level level, Scene scene) {
-    this.width = level.width();
-    this.height = level.height();
     this.content = level.content();
     this.scene = scene;
   }
 
   public boolean isSolid(Vector2 position) {
-    return position.x() < 0
-      || position.y() < 0
-      || position.x() >= this.width
-      || position.y() >= this.height
-      || this.content[position.y()][position.x()] == '#';
+    return !this.content.contains(position) || this.content.get(position) == '#';
   }
 
   public boolean isBlocked(Vector2 position, Body2D ignored) {
@@ -36,9 +28,8 @@ public class CollisionMap {
   }
 
   public boolean isDangerous(Vector2 position) {
-    for (Node node : this.scene.getNodes()) {
-      if (node instanceof Spike spike &&
-        spike.getPosition().equals(position))
+    for (Node2D node : this.getNodesAt(position)) {
+      if (node instanceof Spike)
         return true;
     }
 
@@ -46,10 +37,9 @@ public class CollisionMap {
   }
 
   public Optional<Body2D> getBodyAt(Vector2 position, Body2D ignored) {
-    for (Node node : this.scene.getNodes()) {
+    for (Node2D node : this.getNodesAt(position)) {
       if (node != ignored &&
-        node instanceof Body2D body &&
-        body.getPosition().equals(position))
+        node instanceof Body2D body)
         return Optional.of(body);
     }
 

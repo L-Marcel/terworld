@@ -19,6 +19,7 @@ import ufrn.imd.core.nodes.EndOfLevel;
 import ufrn.imd.core.nodes.Enemy;
 import ufrn.imd.core.nodes.Player;
 import ufrn.imd.core.nodes.Spike;
+import ufrn.imd.core.physics.Grid;
 import ufrn.imd.core.physics.Vector2;
 
 public class Loader {
@@ -65,7 +66,7 @@ public class Loader {
     int width = lines.stream().mapToInt(String::length).max().orElse(0);
     int height = lines.size();
 
-    char[][] content = new char[height][width];
+    Grid content = new Grid(width, height);
 
     for (int row = 0; row < height; row++) {
       String line = lines.get(row);
@@ -73,8 +74,6 @@ public class Loader {
 
       for (int column = 0; column < characters.length; column++) {
         char character = characters[column];
-        content[row][column] = ' ';
-
         Vector2 position = new Vector2(column, row);
 
         switch (character) {
@@ -95,13 +94,9 @@ public class Loader {
             nodes.add(endOfLevel);
             break;
           default:
-            content[row][column] = character;
+            content.put(position, character);
             break;
         }
-      }
-
-      for (int column = characters.length; column < width; column++) {
-        content[row][column] = ' ';
       }
     }
 
@@ -110,20 +105,19 @@ public class Loader {
     );
 
     return new Level(
-      width,
-      height,
       content,
       player,
       nodes
     );
   }
 
-  public List<Block> loadBlocks(char[][] content) {
+  public List<Block> loadBlocks(Grid content) {
     List<Block> blocks = new ArrayList<>();
 
-    for (int row = 0; row < content.length; row++) {
-      for (int column = 0; column < content[row].length; column++) {
-        char character = content[row][column];
+    for (int row = 0; row < content.getHeight(); row++) {
+      for (int column = 0; column < content.getWidth(); column++) {
+        Vector2 position = new Vector2(column, row);
+        char character = content.get(position);
 
         if (character == '#') {
           int neighbors = 0;
@@ -136,16 +130,13 @@ public class Loader {
               if (Math.abs(dx) == Math.abs(dy))
                 continue;
 
-              if (ny < 0 || ny >= content.length || nx < 0 || nx >= content[0].length)
-                continue;
-
-              if (content[ny][nx] == '#')
+              if (content.get(new Vector2(nx, ny)) == '#')
                 neighbors++;
             }
           }
 
           if (neighbors < 4)
-            blocks.add(new Block(new Vector2(column, row)));
+            blocks.add(new Block(position));
         }
       }
     }
