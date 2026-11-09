@@ -11,3 +11,11 @@ mvn
 ### Instruções
 
 Use `a`/`d` para andar, `k` para pular, `j` para atacar, `s` para descer e `Ctrl+C` para sair do jogo. Movimento, pulo e ataque podem acontecer juntos. Chegue ao `?` para avançar.
+
+### Lembretes
+
+* Não deixar nenhum `//@ assume` no código
+* Ter apenas uma clausura de condição de quadro `//@ assigns` por especificação
+* Buscar aumentar o conjunto das pre-condições e diminuir o conjunto das pós-condições
+* Lembrar de especificar construtores com `//@ pure`
+* Lembrar de especificaar `//@ public normal_behavior`
