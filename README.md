@@ -8,17 +8,13 @@ Requer Java 25 e Maven. Para compilar e rodar o jogo, execute na pasta do projet
 mvn
 ```
 
-Para validar o núcleo:
-
-```sh
-./verify-core.sh
-```
-
-Para validar a aplicação inteira:
+Para validar com o `OpenJML`:
 
 ```sh
 ./verify.sh
 ```
+
+> Tem que ter o `OpenJML v21.0.29` instalado.
 
 ### Instruções
 
