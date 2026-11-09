@@ -1,6 +1,8 @@
 # Terworld
 
-Um jogo simples feito para terminal. Requer Java 25 e Maven. Para compilar e rodar o jogo, execute na pasta do projeto:
+Um jogo simples feito para terminal com aplicações do `OpenJML`. Se trata de uma proposta da disciplina de `Lógica Aplicada a Engenharia de Software` que envolve aplicar em um projeto real anotações do `OpenJML` para praticar o `Design By Contract`.
+
+Requer Java 25 e Maven. Para compilar e rodar o jogo, execute na pasta do projeto:
 
 ```sh
 mvn
