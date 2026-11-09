@@ -8,6 +8,18 @@ Requer Java 25 e Maven. Para compilar e rodar o jogo, execute na pasta do projet
 mvn
 ```
 
+Para validar o núcleo:
+
+```sh
+./verify-core.sh
+```
+
+Para validar a aplicação inteira:
+
+```sh
+./verify.sh
+```
+
 ### Instruções
 
 Use `a`/`d` para andar, `k` para pular, `j` para atacar, `s` para descer e `Ctrl+C` para sair do jogo. Movimento, pulo e ataque podem acontecer juntos. Chegue ao `?` para avançar.
