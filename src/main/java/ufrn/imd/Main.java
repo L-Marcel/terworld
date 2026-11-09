@@ -22,11 +22,11 @@ public class Main {
     game.nextLevel();
 
     try (
-    //@formatter:off
+    /* @formatter:off */
       Terminal terminal = TerminalBuilder.terminal();
       KeyListener listener = new KeyListener(terminal);
       Screen screen = new Screen(terminal)
-    //@formatter:on
+    /* @formatter:on */
     ) {
       listener.listen();
       while (!Thread.currentThread().isInterrupted()) {
