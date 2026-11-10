@@ -117,7 +117,7 @@ public class Grid {
   }
 
   //@ public normal_behavior
-  //@ ensures \result <==> (
+  //@ ensures \result == (
   //@   0 <= position.x() && position.x() < this.width
   //@   && 0 <= position.y() && position.y() < this.cells.length
   //@ );

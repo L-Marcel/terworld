@@ -38,7 +38,7 @@ public class HealthComponent {
 
   //@ public normal_behavior
   //@ assignable hasProtection, hp;
-  //@ ensures \result <==> (
+  //@ ensures \result == (
   //@   (\old(this.hp) > 0) && !\old(hasProtection)
   //@ );
   public boolean takeDamage() {
