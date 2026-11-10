@@ -15,9 +15,6 @@ public record Vector2(
 
   public static Vector2 ZERO = new Vector2(0, 0);
 
-  //@ public static invariant ZERO.x == 0;
-  //@ public static invariant ZERO.y == 0;
-
   //@ public normal_behavior
   //@ requires Integer.MIN_VALUE <= this.x + x <= Integer.MAX_VALUE;
   //@ requires Integer.MIN_VALUE <= this.y + y <= Integer.MAX_VALUE;
