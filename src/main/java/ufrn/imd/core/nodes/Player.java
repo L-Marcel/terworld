@@ -46,7 +46,7 @@ public class Player extends Fighter {
       this.face(controls.horizontal() < 0 ? Direction.LEFT : Direction.RIGHT);
 
     boolean grounded = physics.isGrounded(this) && this.getVerticalSpeed() >= 0;
-    if (this.jump.process(controls.jump(), grounded))
+    if (this.jump.canJump(controls.jump(), grounded))
       this.jump();
     if (controls.drop())
       this.drop();
