@@ -5,5 +5,7 @@ public final class Health {
   public static final int ENEMY_MAX_HP = 1;
   public static final double DAMAGE_PROTECTION_SECONDS = 0.7;
 
+  //@ private normal_behavior
+  //@ pure
   private Health() {}
 }

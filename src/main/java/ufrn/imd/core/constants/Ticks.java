@@ -6,5 +6,7 @@ public final class Ticks {
   public static final int MAX_CATCH_UP_STEPS = 5;
   public static final double TIME_EPSILON = 1e-9;
 
+  //@ private normal_behavior
+  //@ pure
   private Ticks() {}
 }
