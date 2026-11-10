@@ -1,3 +1,5 @@
 #!/bin/bash
 
-openjml --esc --progress --dir src/main/java/ufrn/imd
+openjml --esc --timeout=10 --progress \
+ src/main/java/ufrn/imd/core/physics/Grid.java \
+ src/main/java/ufrn/imd/core/physics/Vector2.java
