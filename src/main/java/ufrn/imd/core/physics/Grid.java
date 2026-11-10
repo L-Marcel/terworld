@@ -56,7 +56,9 @@ public class Grid {
       //@ loop_invariant width >= 0;
       //@ loop_invariant \forall int i; 0 <= i < row;
       //@     width >= cells[i].length;
-      //@ loop_invariant row > 0 ==> 0 <= widest < row && width == cells[widest].length;
+      //@ loop_invariant (row > 0) ==> (
+      //@   0 <= widest < row && width == cells[widest].length
+      //@ );
       //@ loop_assignable row, width, widest;
       for (int row = 0; row < cells.length; row++) {
         if (row == 0 || cells[row].length > width) {
