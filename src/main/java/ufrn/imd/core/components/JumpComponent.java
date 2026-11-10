@@ -10,6 +10,9 @@ public class JumpComponent {
   //@ spec_public
   private double coyoteSeconds;
 
+  //@ public invariant 0.0 <= bufferedSeconds <= Double.MAX_VALUE;
+  //@ public invariant 0.0 <= coyoteSeconds <= Double.MAX_VALUE;
+
   //@ public normal_behavior
   //@ assignable bufferedSeconds, coyoteSeconds;
   //@ ensures (requested && grounded) ==> \result;

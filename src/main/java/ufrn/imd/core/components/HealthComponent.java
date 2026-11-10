@@ -17,6 +17,7 @@ public class HealthComponent {
 
   //@ public invariant 0 <= hp <= maxHp;
   //@ public invariant 1 <= maxHp;
+  //@ private invariant 0.0 <= protectionSeconds <= Health.DAMAGE_PROTECTION_SECONDS;
 
   //@ public normal_behavior
   //@ ensures this.hp == this.maxHp;
