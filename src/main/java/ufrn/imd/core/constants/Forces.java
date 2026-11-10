@@ -7,5 +7,7 @@ public final class Forces {
   public static final double ENEMY_SPEED = 2.5;
   public static final double DROP_SPEED = 8.0;
 
+  //@ private normal_behavior
+  //@ pure
   private Forces() {}
 }

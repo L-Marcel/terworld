@@ -6,5 +6,7 @@ import ufrn.imd.core.abstractions.Node2D;
 public final class Comparators {
   public static final Comparator<Node2D> BY_LAYER = Comparator.comparingInt(Node2D::getLayer);
 
+  //@ private normal_behavior
+  //@ pure
   private Comparators() {}
 }

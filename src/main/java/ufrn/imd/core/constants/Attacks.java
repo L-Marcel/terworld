@@ -9,5 +9,7 @@ public final class Attacks {
   public static final double ENEMY_RECOVERY_SECONDS = 0.5;
   public static final double INPUT_BUFFER_SECONDS = 0.1;
 
+  //@ private normal_behavior
+  //@ pure
   private Attacks() {}
 }
