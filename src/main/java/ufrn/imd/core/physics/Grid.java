@@ -26,10 +26,17 @@ public class Grid {
     this.width = Math.max(0, width);
     this.cells = new char[Math.max(0, height)][this.width];
     //@ loop_invariant 0 <= row <= this.cells.length;
+    //@ loop_invariant \forall int i; 0 <= i < row;
+    //@   (\forall int j; 0 <= j < this.width;
+    //@     this.cells[i][j] == ' ');
     //@ loop_assignable row, this.cells[*][*];
+    //@ decreases this.cells.length - row;
     for (int row = 0; row < this.cells.length; row++) {
       //@ loop_invariant 0 <= col <= this.width;
+      //@ loop_invariant \forall int j; 0 <= j < col;
+      //@   this.cells[row][j] == ' ';
       //@ loop_assignable col, this.cells[row][*];
+      //@ decreases this.width - col;
       for (int col = 0; col < this.width; col++)
         this.cells[row][col] = ' ';
     }
@@ -60,6 +67,7 @@ public class Grid {
       //@   0 <= widest < row && width == cells[widest].length
       //@ );
       //@ loop_assignable row, width, widest;
+      //@ decreases cells.length - row;
       for (int row = 0; row < cells.length; row++) {
         if (row == 0 || cells[row].length > width) {
           width = cells[row].length;
@@ -86,6 +94,7 @@ public class Grid {
     //@   (\forall int c; 0 <= c < Math.min(this.width, cells[r].length);
     //@     this.cells[r][c] == cells[r][c]);
     //@ loop_assignable row, this.cells[*][*];
+    //@ decreases cells.length - row;
     for (int row = 0; row < cells.length; row++) {
       int maxCols = this.width;
 
@@ -96,6 +105,7 @@ public class Grid {
       //@ loop_invariant \forall int c; 0 <= c < Math.min(col, cells[row].length);
       //@   this.cells[row][c] == cells[row][c];
       //@ loop_assignable col, this.cells[row][*];
+      //@ decreases maxCols - col;
       for (int col = 0; col < maxCols; col++) {
         this.cells[row][col] = col < cells[row].length ? cells[row][col] : ' ';
       }
