@@ -160,8 +160,9 @@ public class Grid {
   //@ public normal_behavior
   //@ requires 0 <= row < this.cells.length;
   //@ requires this.cells[row].length == this.width;
-  //@ requires columns > 0;
+  //@ requires columns >= 0;
   //@ ensures 0 <= \result.length() <= columns;
+  //@ spec_pure
   public String getRow(int row, int left, int columns) {
     if (row < 0 || row >= this.getHeight() || columns <= 0)
       return "";
