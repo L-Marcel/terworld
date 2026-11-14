@@ -1,6 +1,6 @@
 #!/bin/bash
 
-openjml --esc --timeout=60 --progress \
+openjml --esc --timeout=60 \
   src/main/java/ufrn/imd/core/physics/Grid.java \
   src/main/java/ufrn/imd/core/physics/Vector2.java \
   src/main/java/ufrn/imd/core/components/HealthComponent.java \
@@ -15,5 +15,6 @@ openjml --esc --timeout=60 --progress \
   src/main/java/ufrn/imd/core/components/AttackComponent.java \
   src/main/java/ufrn/imd/core/components/MovementComponent.java \
   src/main/java/ufrn/imd/core/enums/AttackState.java \
-  src/main/java/ufrn/imd/core/rendering/Camera.java
+  src/main/java/ufrn/imd/core/rendering/Camera.java \
+  src/main/java/ufrn/imd/core/enums/Direction.java
   
