@@ -14,5 +14,6 @@ openjml --esc --timeout=60 --progress \
   src/main/java/ufrn/imd/core/constants/Rendering.java \
   src/main/java/ufrn/imd/core/components/AttackComponent.java \
   src/main/java/ufrn/imd/core/components/MovementComponent.java \
-  src/main/java/ufrn/imd/core/enums/AttackState.java
+  src/main/java/ufrn/imd/core/enums/AttackState.java \
+  src/main/java/ufrn/imd/core/rendering/Camera.java
   

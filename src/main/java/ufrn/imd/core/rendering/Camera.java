@@ -7,6 +7,12 @@ import ufrn.imd.core.physics.Grid;
 import ufrn.imd.core.physics.Vector2;
 
 public class Camera {
+  //@ public normal_behavior
+  //@ requires map.getHeight() > 0 ==> map.getWidth() > 0;
+  //@ requires columns > 0 ==> Integer.MIN_VALUE + columns <= target.x();
+  //@ requires rows > 0 ==> Integer.MIN_VALUE + rows <= target.y();
+  //@ ensures \result != null;
+  //@ ensures (columns <= 0 || rows <= 0) ==> \result.size() == 0;
   public List<String> capture(
     Grid map,
     Vector2 target,
@@ -26,9 +32,12 @@ public class Camera {
     int top = Math.max(0, Math.min(target.y() - offsetY, mapHeight - height));
 
     List<String> lines = new ArrayList<>(rows);
+
+    //@ loop_invariant 0 <= row <= rows - height;
     for (int row = 0; row < rows - height; row++)
       lines.add(" ".repeat(width));
 
+    //@ loop_invariant top <= row <= top + height;
     for (int row = top; row < top + height; row++)
       lines.add(map.getRow(row, left, width));
 
