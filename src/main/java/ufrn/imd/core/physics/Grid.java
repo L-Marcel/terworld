@@ -113,6 +113,7 @@ public class Grid {
   }
 
   //@ public normal_behavior
+  //@ ensures 0 <= \result <= Integer.MAX_VALUE;
   //@ ensures \result == this.width;
   //@ spec_pure
   public int getWidth() {
@@ -120,6 +121,7 @@ public class Grid {
   }
 
   //@ public normal_behavior
+  //@ ensures 0 <= \result <= Integer.MAX_VALUE;
   //@ ensures \result == this.cells.length;
   //@ spec_pure
   public int getHeight() {
