@@ -18,6 +18,10 @@ public class MovementComponent {
   //@ public invariant Forces.JUMP_SPEED <= verticalSpeed <= Double.MAX_VALUE;
   //@ public invariant 0.0 <= horizontalDelay;
 
+  //@ public initially horizontalSpeed == 0.0; 
+  //@ public initially verticalSpeed == 0.0;
+  //@ public initially horizontalDelay == 0.0;
+
   //@ public normal_behavior
   //@ requires -Double.MAX_VALUE <= speed <= Double.MAX_VALUE;
   //@ ensures this.horizontalSpeed == speed;

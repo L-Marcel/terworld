@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 openjml --esc --timeout=60 \
   --smt-strings=false \
   src/main/java/ufrn/imd/core/physics/Grid.java \
@@ -18,4 +20,12 @@ openjml --esc --timeout=60 \
   src/main/java/ufrn/imd/core/enums/AttackState.java \
   src/main/java/ufrn/imd/core/rendering/Camera.java \
   src/main/java/ufrn/imd/core/enums/Direction.java
-  
+
+openjml --esc --timeout=60 \
+  --smt-strings=false \
+  --source-path src/main/java \
+  --method='ufrn.imd.core.abstractions.Node[.].*;ufrn.imd.core.abstractions.Node2D[.].*;ufrn.imd.core.abstractions.Body2D.Body2D;ufrn.imd.core.abstractions.Body2D.jump;ufrn.imd.core.abstractions.Body2D.drop;ufrn.imd.core.abstractions.Body2D.setHorizontalSpeed;ufrn.imd.core.abstractions.Body2D.getVerticalSpeed;ufrn.imd.core.physics.Physics.getCollisionMap' \
+  src/main/java/ufrn/imd/core/abstractions/Node.java \
+  src/main/java/ufrn/imd/core/abstractions/Node2D.java \
+  src/main/java/ufrn/imd/core/abstractions/Body2D.java \
+  src/main/java/ufrn/imd/core/physics/Physics.java

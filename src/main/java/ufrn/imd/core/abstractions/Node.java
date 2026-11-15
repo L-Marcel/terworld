@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-// import ufrn.imd.core.Controls;
-// import ufrn.imd.core.physics.Physics;
+import ufrn.imd.core.Controls;
+import ufrn.imd.core.physics.Physics;
 
 public abstract class Node {
   //@ spec_public
@@ -135,5 +135,5 @@ public abstract class Node {
     return Collections.unmodifiableList(this.children);
   }
 
-  //public void process(Controls controls, Physics physics) {}
+  public void process(Controls controls, Physics physics) {}
 }

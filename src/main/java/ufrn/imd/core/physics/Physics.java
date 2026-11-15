@@ -4,7 +4,10 @@ import ufrn.imd.core.abstractions.Body2D;
 import ufrn.imd.core.resolvers.ContactResolver;
 
 public class Physics {
+  //@ spec_public
   private final CollisionMap collisions;
+
+  //@ spec_public
   private final ContactResolver contacts;
 
   public Physics(CollisionMap collisions) {
@@ -46,6 +49,9 @@ public class Physics {
     return !body.isFreePending() && this.collisions.isBlocked(body.getPosition().sum(0, 1), body);
   }
 
+  //@ public normal_behavior
+  //@ ensures \result == this.collisions;
+  //@ pure
   public CollisionMap getCollisionMap() {
     return this.collisions;
   }
