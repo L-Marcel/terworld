@@ -12,21 +12,15 @@ public class Camera {
   //@ requires 0 <= rows <= Integer.MAX_VALUE;
   //@ requires 0 <= target.x() <= Integer.MAX_VALUE;
   //@ requires 0 <= target.y() <= Integer.MAX_VALUE;
-  //@ requires 0 <= map.getWidth() <= Integer.MAX_VALUE;
-  //@ requires 0 <= map.getHeight() <= Integer.MAX_VALUE;
+  //@ requires 0 <= map.width <= Integer.MAX_VALUE;
+  //@ requires 0 <= map.cells.length <= Integer.MAX_VALUE;
   //@ requires (columns > 0) ==> (Integer.MIN_VALUE + columns <= target.x());
   //@ requires (rows > 0) ==> (Integer.MIN_VALUE + rows <= target.y());
   //@ ensures (columns == 0 || rows == 0) ==> (\result.size() == 0);
   //@ ensures (columns > 0 && rows > 0) ==> (\result.size() == rows);
-  //@ {|
-  //@   requires map.getWidth() > columns;
-  //@   ensures \forall int i; 0 <= i < \result.size();
-  //@     0 <= \result.get(i).length() <= columns;
-  //@   also
-  //@   requires map.getWidth() <= columns;
-  //@   ensures \forall int i; 0 <= i < \result.size();
-  //@     0 <= \result.get(i).length() <= map.getWidth();
-  //@ |}
+  //@ ensures \forall int i; 0 <= i < \result.size();
+  //@     0 <= \result.values[i].chars.length <= Math.min(columns, map.width);
+  //@ assignable \nothing;
   public List<String> capture(
     Grid map,
     Vector2 target,

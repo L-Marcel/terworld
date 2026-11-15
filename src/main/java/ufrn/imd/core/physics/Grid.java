@@ -48,38 +48,6 @@ public class Grid {
   }
 
   //@ private normal_behavior
-  //@ ensures \forall int i; 0 <= i < cells.length;
-  //@   \result >= cells[i].length;
-  //@ ensures (cells.length > 0) ==> \exists int i; 0 <= i < cells.length;
-  //@   \result == cells[i].length;
-  //@ ensures \result >= 0;
-  //@ spec_pure
-  private static int widthOf(char[][] cells) {
-    int width = 0;
-    //@ ghost int widest = 0;
-
-    if (cells != null) {
-      //@ loop_invariant 0 <= row <= cells.length;
-      //@ loop_invariant width >= 0;
-      //@ loop_invariant \forall int i; 0 <= i < row;
-      //@     width >= cells[i].length;
-      //@ loop_invariant (row > 0) ==> (
-      //@   0 <= widest < row && width == cells[widest].length
-      //@ );
-      //@ loop_assignable row, width, widest;
-      //@ decreases cells.length - row;
-      for (int row = 0; row < cells.length; row++) {
-        if (row == 0 || cells[row].length > width) {
-          width = cells[row].length;
-          //@ set widest = row;
-        }
-      }
-    }
-
-    return width;
-  }
-
-  //@ private normal_behavior
   //@ requires width >= 0;
   //@ assignable \nothing;
   //@ ensures this.width == width && this.cells.length == cells.length;
@@ -110,6 +78,38 @@ public class Grid {
         this.cells[row][col] = col < cells[row].length ? cells[row][col] : ' ';
       }
     }
+  }
+
+  //@ private normal_behavior
+  //@ ensures \forall int i; 0 <= i < cells.length;
+  //@   \result >= cells[i].length;
+  //@ ensures (cells.length > 0) ==> \exists int i; 0 <= i < cells.length;
+  //@   \result == cells[i].length;
+  //@ ensures \result >= 0;
+  //@ spec_pure
+  private static int widthOf(char[][] cells) {
+    int width = 0;
+    //@ ghost int widest = 0;
+
+    if (cells != null) {
+      //@ loop_invariant 0 <= row <= cells.length;
+      //@ loop_invariant width >= 0;
+      //@ loop_invariant \forall int i; 0 <= i < row;
+      //@     width >= cells[i].length;
+      //@ loop_invariant (row > 0) ==> (
+      //@   0 <= widest < row && width == cells[widest].length
+      //@ );
+      //@ loop_assignable row, width, widest;
+      //@ decreases cells.length - row;
+      for (int row = 0; row < cells.length; row++) {
+        if (row == 0 || cells[row].length > width) {
+          width = cells[row].length;
+          //@ set widest = row;
+        }
+      }
+    }
+
+    return width;
   }
 
   //@ public normal_behavior
