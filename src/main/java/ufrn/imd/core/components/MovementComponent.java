@@ -89,6 +89,7 @@ public class MovementComponent {
     int horizontal = 0;
 
     this.horizontalDelay = Math.max(0, this.horizontalDelay - Ticks.STEP_SECONDS);
+    //@ split;
     if (this.horizontalSpeed != 0 && this.horizontalDelay <= Ticks.TIME_EPSILON) {
       horizontal = this.horizontalSpeed > 0 ? 1 : -1;
       this.horizontalDelay += 1.0 / Math.abs(this.horizontalSpeed);
