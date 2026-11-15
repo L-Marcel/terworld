@@ -27,3 +27,9 @@ Use `a`/`d` para andar, `k` para pular, `j` para atacar, `s` para descer e `Ctrl
 * Buscar aumentar o conjunto das pre-condições e diminuir o conjunto das pós-condições
 * Lembrar de especificar construtores com `//@ pure`
 * Lembrar de especificaar `//@ public normal_behavior`
+
+## Por que `--smt-strings=false`?
+
+Essa `flag` desativa um resolvedor nativo de Strings, que permite ao `OpenJML` entender de forma nativa operações como: concatenação, `substring`, `contains`, `indexOf`, etc. Infelizmente, isso estava ocasionando explosão de casos de verificação, então desativamos.
+
+Felizmente, isso não causa perda de segurança nas especificações formais do `OpenJML`, apenas nos força, ocasionalmente, a reescrever algumas verificações de strings de forma mais manual.

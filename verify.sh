@@ -1,6 +1,7 @@
 #!/bin/bash
 
 openjml --esc --timeout=60 \
+  --smt-strings=false \
   src/main/java/ufrn/imd/core/physics/Grid.java \
   src/main/java/ufrn/imd/core/physics/Vector2.java \
   src/main/java/ufrn/imd/core/components/HealthComponent.java \
