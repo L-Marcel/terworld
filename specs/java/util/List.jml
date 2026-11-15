@@ -119,9 +119,6 @@ public interface List<E> extends SequencedCollection<E> {
     boolean add(/*@ nullable */ E o);
 
 
-    // Local correction for OpenJML 21.0.29. Removing an absent element returns
-    // false and preserves the sequence. A successful removal reduces its length.
-    // Optional RuntimeExceptions remain allowed except for an exact ArrayList.
     /*-RAC@ also public behavior
       @   requires !containsNull ==> o != null;
       @   assignable values;

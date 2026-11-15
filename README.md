@@ -60,3 +60,5 @@ No arquivo original de especificação de `List` na versão do `OpenJML` que peg
 /*+RAC@ also public behavior requires true; */
 boolean remove(Object o);
 ```
+
+Por conta disso, importamos logo todas para dentro do projeto para podermos fazer as correções necessárias e conseguirmos rodar a validação com sucesso.
