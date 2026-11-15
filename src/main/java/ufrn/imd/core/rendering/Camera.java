@@ -20,6 +20,7 @@ public class Camera {
   //@ ensures (columns > 0 && rows > 0) ==> (\result.size() == rows);
   //@ ensures \forall int i; 0 <= i < \result.size();
   //@     0 <= \result.values[i].chars.length <= Math.min(columns, map.width);
+  //@ ensures \fresh(\result);
   //@ assignable \nothing;
   public List<String> capture(
     Grid map,
@@ -72,6 +73,7 @@ public class Camera {
   //@ requires 0 <= width <= Integer.MAX_VALUE;
   //@ ensures \result.chars.length == width;
   //@ ensures \forall int i; 0 <= i < width; \result.chars[i] == ' ';
+  //@ ensures \fresh(\result);
   //@ spec_pure
   private static String spaces(int width) {
     char[] buffer = new char[width];
