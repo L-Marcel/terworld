@@ -19,7 +19,11 @@ public class Camera {
   //@ ensures (columns == 0 || rows == 0) ==> (\result.size() == 0);
   //@ ensures (columns > 0 && rows > 0) ==> (\result.size() == rows);
   //@ ensures \forall int i; 0 <= i < \result.size();
-  //@     0 <= \result.values[i].chars.length <= Math.min(columns, map.width);
+  //@     \result.get(i) instanceof String;
+  //@ ensures \forall int i; 0 <= i < \result.size();
+  //@     \typeof(\result.get(i)) <:= \type(String);
+  //@ ensures \forall int i; 0 <= i < \result.size();
+  //@     0 <= \result.get(i).length() <= Math.min(columns, map.width);
   //@ ensures \fresh(\result);
   //@ assignable \nothing;
   public List<String> capture(
@@ -44,6 +48,10 @@ public class Camera {
 
     //@ loop_invariant 0 <= row <= rows - height;
     //@ loop_invariant \forall int i; 0 <= i < row;
+    //@   lines[i] instanceof String;
+    //@ loop_invariant \forall int i; 0 <= i < row;
+    //@   \typeof(lines[i]) <:= \type(String);
+    //@ loop_invariant \forall int i; 0 <= i < row;
     //@   lines[i].chars.length == width;
     //@ loop_invariant \forall int i; 0 <= i < row;
     //@   (\forall int j; 0 <= j < width; 
@@ -54,6 +62,10 @@ public class Camera {
       lines[row] = spaces(width);
 
     //@ loop_invariant top <= row <= top + height;
+    //@ loop_invariant \forall int i; 0 <= i < rows - height + (row - top);
+    //@   lines[i] instanceof String;
+    //@ loop_invariant \forall int i; 0 <= i < rows - height + (row - top);
+    //@   \typeof(lines[i]) <:= \type(String);
     //@ loop_invariant \forall int i; 0 <= i < rows - height;
     //@   lines[i].chars.length == width;
     //@ loop_invariant \forall int i; 0 <= i < rows - height;

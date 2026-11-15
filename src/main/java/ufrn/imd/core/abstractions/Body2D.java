@@ -4,7 +4,6 @@ import ufrn.imd.core.Controls;
 import ufrn.imd.core.components.MovementComponent;
 import ufrn.imd.core.physics.Physics;
 import ufrn.imd.core.physics.Vector2;
-// @ model import ufrn.imd.core.constants.Forces;
 
 public abstract class Body2D extends Node2D {
   //@ spec_public
@@ -27,17 +26,17 @@ public abstract class Body2D extends Node2D {
   }
 
   //@ protected normal_behavior
-  //@ ensures this.movement.verticalSpeed == Forces.JUMP_SPEED;
+  //@ ensures this.movement.verticalSpeed == ufrn.imd.core.constants.Forces.JUMP_SPEED;
   //@ assignable this.movement.verticalSpeed;
   protected final void jump() {
     this.movement.jump();
   }
 
   //@ protected normal_behavior
-  //@ ensures (\old(this.movement.verticalSpeed) > Forces.DROP_SPEED) ==>
+  //@ ensures (\old(this.movement.verticalSpeed) > ufrn.imd.core.constants.Forces.DROP_SPEED) ==>
   //@   this.movement.verticalSpeed == \old(this.movement.verticalSpeed);
-  //@ ensures (\old(this.movement.verticalSpeed) <= Forces.DROP_SPEED) ==>
-  //@   this.movement.verticalSpeed == Forces.DROP_SPEED;
+  //@ ensures (\old(this.movement.verticalSpeed) <= ufrn.imd.core.constants.Forces.DROP_SPEED) ==>
+  //@   this.movement.verticalSpeed == ufrn.imd.core.constants.Forces.DROP_SPEED;
   //@ assignable this.movement.verticalSpeed;
   protected final void drop() {
     this.movement.drop();
