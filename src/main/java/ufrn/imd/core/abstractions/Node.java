@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import ufrn.imd.core.Controls;
-import ufrn.imd.core.physics.Physics;
+// import ufrn.imd.core.Controls;
+// import ufrn.imd.core.physics.Physics;
 
 public abstract class Node {
   //@ spec_public
@@ -18,12 +18,12 @@ public abstract class Node {
   //@ nullable
   private Node parent;
 
-  //@ public invariant children.values.length >= 0;
+  //@ public invariant children.size() >= 0;
   //@ public invariant \typeof(children) == \type(ArrayList<Node>);
 
   //@ protected normal_behavior
   //@ ensures freeIsPending == false;
-  //@ ensures children.values.length == 0;
+  //@ ensures children.size() == 0;
   //@ ensures parent == null;
   //@ pure
   protected Node() {
@@ -35,7 +35,7 @@ public abstract class Node {
   //@ ensures this instanceof Node;
   //@ ensures \typeof(this) <:= \type(Node);
   //@ ensures freeIsPending == true;
-  //@ ensures \forall int i; 0 <= i < children.values.length;
+  //@ ensures \forall int i; 0 <= i < children.size();
   //@   children.values[i].freeIsPending;
   //@ ensures \forall Node n; n != null;
   //@   n.children == \old(n.children) && n.children.values == \old(n.children.values);
@@ -47,7 +47,7 @@ public abstract class Node {
   public final void queueFree() {
     this.freeIsPending = true;
     //@ loop_invariant 0 <= \count;
-    //@ loop_invariant \count == 0 || \count <= this.children.values.length;
+    //@ loop_invariant \count == 0 || \count <= this.children.size();
     //@ loop_invariant this.freeIsPending == true;
     //@ loop_invariant this.children.values == \old(this.children.values);
     //@ loop_invariant \forall Node n; n != null;
@@ -59,7 +59,7 @@ public abstract class Node {
     //@     && \typeof(this.children.values[i]) <:= \type(Node)
     //@     && this.children.values[i].freeIsPending;
     //@ loop_assignable \everything;
-    //@ decreases this.children.values.length - \count;
+    //@ decreases this.children.size() - \count;
     for (Node child : this.children) {
       child.queueFree();
     }
@@ -86,11 +86,11 @@ public abstract class Node {
   //@     this.children.values;
   //@ |}
   //@ ensures (\old(node.parent) != null && \old(node.parent) != this) ==> (
-  //@   !\exists int i; 0 <= i < \old(node.parent).children.values.length;
+  //@   !\exists int i; 0 <= i < \old(node.parent).children.size();
   //@     \old(node.parent).children.values[i] == node
   //@ );
   //@ ensures node.parent == this;
-  //@ ensures this.children.values[this.children.values.length - 1] == node;
+  //@ ensures this.children.values[this.children.size() - 1] == node;
   public final void addChild(Node node) {
     if (node.parent != null)
       node.parent.removeChild(node);
@@ -101,32 +101,41 @@ public abstract class Node {
   //@ public normal_behavior
   //@ ensures !this.children.contains(node);
   //@ ensures (
-  //@   \exists int i; 0 <= i < \old(this.children.values.length);
+  //@   \exists int i; 0 <= i < \old(this.children.size());
   //@     \old(this.children.values[i]) == node
   //@ ) ==> node.parent == null;
   //@ assignable children.values, node.parent;
   public final void removeChild(Node node) {
     //@ ghost \bigint count = 0;
-    //@ loop_invariant 0 <= count <= \old(this.children.values.length);
-    //@ loop_invariant this.children.values.length == \old(this.children.values.length) - count;
+    //@ loop_invariant 0 <= count <= \old(this.children.size());
+    //@ loop_invariant this.children.size() == \old(this.children.size()) - count;
     //@ loop_invariant count > 0 ==> node.parent == null;
     //@ loop_invariant (count > 0) | (this.children.values == \old(this.children.values));
     //@ loop_assignable this.children.values, 
     //@   node.parent, count;
-    //@ decreases \old(this.children.values.length) - count;
+    //@ decreases \old(this.children.size()) - count;
     while (this.children.remove(node)) {
       node.parent = null;
       //@ set count = count + 1;
     }
   }
 
+  //@ public normal_behavior
+  //@ ensures \fresh(\result);
+  //@ ensures \result.value == this.parent;
+  //@ assignable \nothing;
   public Optional<Node> getParent() {
     return Optional.ofNullable(this.parent);
   }
 
+  //@ public normal_behavior
+  //@   ensures (* \result.isImmutable *);
+  //@   ensures \result.size() == this.children.size();
+  //@   ensures (\forall int i; 0 <= i && i < \result.size(); \result.get(i) == this.children.get(i));
+  //@ pure
   public List<Node> getChildren() {
     return Collections.unmodifiableList(this.children);
   }
 
-  public void process(Controls controls, Physics physics) {}
+  //public void process(Controls controls, Physics physics) {}
 }
