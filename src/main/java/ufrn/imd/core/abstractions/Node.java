@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import ufrn.imd.core.Controls;
+import ufrn.imd.core.physics.Physics;
 
 public abstract class Node {
   //@ spec_public
@@ -30,7 +32,8 @@ public abstract class Node {
   }
 
   //@ public normal_behavior
-  //@ ensures this instanceof Node && \typeof(this) <:= \type(Node);
+  //@ ensures this instanceof Node;
+  //@ ensures \typeof(this) <:= \type(Node);
   //@ ensures freeIsPending == true;
   //@ ensures \forall int i; 0 <= i < children.values.length;
   //@   children.values[i].freeIsPending;
@@ -125,5 +128,5 @@ public abstract class Node {
     return Collections.unmodifiableList(this.children);
   }
 
-  //public void process(Controls controls, Physics physics) {}
+  public void process(Controls controls, Physics physics) {}
 }
