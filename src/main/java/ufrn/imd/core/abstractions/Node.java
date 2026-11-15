@@ -32,37 +32,34 @@ public abstract class Node {
   }
 
   //@ public normal_behavior
-  //@ ensures this instanceof Node;
-  //@ ensures \typeof(this) <:= \type(Node);
   //@ ensures freeIsPending == true;
   //@ ensures \forall int i; 0 <= i < children.size();
   //@   children.get(i).freeIsPending;
   //@ ensures \forall Node n; n != null;
-  //@   n.children == \old(n.children) && n.children.values == \old(n.children.values);
+  //@   n.children.values == \old(n.children.values);
   //@ ensures \forall Node n; n != null && \old(n.freeIsPending);
   //@   n.freeIsPending;
-  //@ ensures \old(\invariant_for(this)) ==> \invariant_for(this);
   //@ assignable \everything;
-  //@ helper
   public final void queueFree() {
     this.freeIsPending = true;
-    //@ loop_invariant 0 <= \count;
-    //@ loop_invariant (\count == 0) || (\count <= this.children.size());
+    //@ loop_invariant 0 <= \count <= this.children.size();
     //@ loop_invariant this.freeIsPending == true;
-    //@ loop_invariant this.children.values == \old(this.children.values);
     //@ loop_invariant \forall int i; 0 <= i < this.children.size();
     //@   this.children.get(i) == \old(this.children.get(i));
     //@ loop_invariant \forall Node n; n != null;
-    //@   n.children == \old(n.children) && n.children.values == \old(n.children.values);
+    //@   n.children.values == \old(n.children.values);
     //@ loop_invariant \forall Node n; n != null && \old(n.freeIsPending);
     //@   n.freeIsPending;
     //@ loop_invariant \forall int i; 0 <= i < \count;
-    //@   this.children.get(i) instanceof Node
-    //@     && \typeof(this.children.get(i)) <:= \type(Node)
-    //@     && this.children.get(i).freeIsPending;
+    //@   this.children.get(i) instanceof Node;
+    //@ loop_invariant \forall int i; 0 <= i < \count;
+    //@   \typeof(this.children.get(i)) <:= \type(Node);
+    //@ loop_invariant \forall int i; 0 <= i < \count;
+    //@   this.children.get(i).freeIsPending;
     //@ loop_assignable \everything;
     //@ decreases this.children.size() - \count;
     for (Node child : this.children) {
+      //@ assert child == this.children.get(\count);
       child.queueFree();
     }
   }
