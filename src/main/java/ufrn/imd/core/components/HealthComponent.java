@@ -21,6 +21,8 @@ public class HealthComponent {
 
   //@ public normal_behavior
   //@ ensures this.hp == this.maxHp;
+  //@ ensures this.maxHp == Math.max(1, \old(maxHp));
+  //@ ensures !hasProtection;
   //@ pure
   public HealthComponent(int maxHp) {
     maxHp = Math.max(1, maxHp);
@@ -38,10 +40,17 @@ public class HealthComponent {
   }
 
   //@ public normal_behavior
-  //@ assignable hasProtection, hp;
-  //@ ensures \result == (
-  //@   (\old(this.hp) > 0) && !\old(hasProtection)
-  //@ );
+  //@ ensures \result == (\old(this.hp) > 0 && !\old(hasProtection));
+  //@ ensures this.hp == (\old(this.hp) - (\result ? 1 : 0));
+  //@ ensures (\result && this.hp > 0) ==> hasProtection;
+  //@ ensures !\result ==> hasProtection == \old(hasProtection);
+  //@ {|
+  //@   requires hp > 0 && !hasProtection;
+  //@   assignable hasProtection, hp;
+  //@   also
+  //@   requires hp == 0 || hasProtection;
+  //@   assignable \nothing;
+  //@ |}
   public boolean takeDamage() {
     if (this.isDead() || this.isProtected())
       return false;

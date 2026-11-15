@@ -14,6 +14,7 @@ public abstract class Body2D extends Node2D {
   //@ ensures this.layer == layer;
   //@ ensures !freeIsPending;
   //@ ensures children.size() == 0;
+  //@ ensures \fresh(children);
   //@ ensures parent == null;
   //@ ensures \fresh(this.movement);
   //@ ensures this.movement.horizontalSpeed == 0.0;

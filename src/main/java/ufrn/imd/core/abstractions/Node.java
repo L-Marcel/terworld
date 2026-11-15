@@ -24,6 +24,7 @@ public abstract class Node {
   //@ protected normal_behavior
   //@ ensures freeIsPending == false;
   //@ ensures children.size() == 0;
+  //@ ensures \fresh(children);
   //@ ensures parent == null;
   //@ pure
   protected Node() {
@@ -89,6 +90,10 @@ public abstract class Node {
   //@     \old(node.parent).children.get(i) == node
   //@ );
   //@ ensures node.parent == this;
+  //@ ensures children.size() > 0;
+  //@ ensures (\old(node.parent) == null) ==> (
+  //@   children.size() == \old(children.size()) + 1
+  //@ );
   //@ ensures this.children.get(this.children.size() - 1) == node;
   public final void addChild(Node node) {
     if (node.parent != null)
@@ -108,8 +113,8 @@ public abstract class Node {
     //@ ghost \bigint count = 0;
     //@ loop_invariant 0 <= count <= \old(this.children.size());
     //@ loop_invariant this.children.size() == \old(this.children.size()) - count;
-    //@ loop_invariant count > 0 ==> node.parent == null;
-    //@ loop_invariant (count > 0) | (this.children.values == \old(this.children.values));
+    //@ loop_invariant (count > 0) ==> node.parent == null;
+    //@ loop_invariant (count > 0) || (this.children.values == \old(this.children.values));
     //@ loop_assignable this.children.values, 
     //@   node.parent, count;
     //@ decreases \old(this.children.size()) - count;
@@ -128,8 +133,9 @@ public abstract class Node {
   }
 
   //@ public normal_behavior
-  //@   ensures \result.size() == this.children.size();
-  //@   ensures (\forall int i; 0 <= i && i < \result.size(); \result.get(i) == this.children.get(i));
+  //@ ensures \result.size() == this.children.size();
+  //@ ensures \forall int i; 0 <= i && i < \result.size(); 
+  //@   \result.get(i) == this.children.get(i);
   //@ pure
   public List<Node> getChildren() {
     return Collections.unmodifiableList(this.children);

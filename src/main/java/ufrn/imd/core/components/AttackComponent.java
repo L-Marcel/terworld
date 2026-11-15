@@ -59,6 +59,8 @@ public class AttackComponent {
   //@ public normal_behavior
   //@ ensures \result == (\old(this.state) == AttackState.IDLE);
   //@ ensures (!\result) ==> (this.bufferedSeconds == Attacks.INPUT_BUFFER_SECONDS);
+  //@ ensures this.state != AttackState.IDLE;
+  //@ ensures (!\result) ==> this.state == \old(this.state);
   //@ assignable this.bufferedSeconds, this.state, this.remainingSeconds;
   public boolean request() {
     if (this.isIdle()) {

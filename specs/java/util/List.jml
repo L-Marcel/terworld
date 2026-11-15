@@ -28,6 +28,11 @@ package java.util;
  */      @SuppressWarnings("unchecked")
 public interface List<E> extends SequencedCollection<E> {
 
+    //@ public normal_behavior
+    //@ ensures \result.size() == 0;
+    //@ pure
+    static <E> List<E> of();
+
     /*@ public normal_behavior
       @   ensures \result;
       @ public pure model boolean initialList();

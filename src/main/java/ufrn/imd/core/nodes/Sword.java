@@ -12,12 +12,26 @@ import ufrn.imd.core.physics.Physics;
 import ufrn.imd.core.physics.Vector2;
 
 public class Sword extends Node2D {
+  //@ spec_public
   private final Fighter owner;
   private final SwordTip tip;
   private final Set<Fighter> hitTargets;
   private List<Vector2> cells;
   private boolean wasAttacking;
 
+  //@ public normal_behavior
+  //@ requires Integer.MIN_VALUE <= (
+  //@   owner.position.x() + 2 * owner.facing.step()
+  //@ ) <= Integer.MAX_VALUE;
+  //@ ensures this.owner == owner;
+  //@ ensures position.x() == owner.position.x() + owner.facing.step();
+  //@ ensures position.y() == owner.position.y();
+  //@ ensures layer == 0;
+  //@ ensures \invariant_for(this);
+  //@ ensures !freeIsPending;
+  //@ ensures children.size() == 0;
+  //@ ensures parent == null;
+  //@ pure helper
   public Sword(Fighter owner) {
     super(owner.getPosition().sum(owner.getFacing().step(), 0));
     this.owner = owner;
@@ -67,6 +81,10 @@ public class Sword extends Node2D {
       this.addChild(this.tip);
   }
 
+  //@ public normal_behavior
+  //@ requires \invariant_for(owner);
+  //@ ensures \result == owner.facing;
+  //@ pure
   public Direction getFacing() {
     return this.owner.getFacing();
   }

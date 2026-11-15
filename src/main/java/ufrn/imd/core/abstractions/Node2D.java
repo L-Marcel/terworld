@@ -14,6 +14,7 @@ public abstract class Node2D extends Node {
   //@ ensures this.layer == 0;
   //@ ensures !freeIsPending;
   //@ ensures children.size() == 0;
+  //@ ensures \fresh(children);
   //@ ensures parent == null;
   //@ pure
   protected Node2D(Vector2 position) {
@@ -25,6 +26,7 @@ public abstract class Node2D extends Node {
   //@ ensures this.layer == layer;
   //@ ensures !freeIsPending;
   //@ ensures children.size() == 0;
+  //@ ensures \fresh(children);
   //@ ensures parent == null;
   //@ pure
   protected Node2D(Vector2 position, int layer) {

@@ -20,6 +20,7 @@ public record Vector2(
   //@ requires Integer.MIN_VALUE <= this.y + y <= Integer.MAX_VALUE;
   //@ ensures \result.x == this.x + x;
   //@ ensures \result.y == this.y + y;
+  //@ pure
   public Vector2 sum(int x, int y) {
     return this.sum(new Vector2(x, y));
   }
@@ -29,6 +30,7 @@ public record Vector2(
   //@ requires Integer.MIN_VALUE <= this.y + vector.y <= Integer.MAX_VALUE;
   //@ ensures \result.x == this.x + vector.x;
   //@ ensures \result.y == this.y + vector.y;
+  //@ pure
   public Vector2 sum(Vector2 vector) {
     return new Vector2(
       this.x + vector.x,
